@@ -3,7 +3,7 @@ This directory contains a snakemake file and a python script to run CNVkit on Tw
 - run\_CNVkit.smk
 - vcf2excel\_cnvkit.py 
 
-## threshold calculator
+## Threshold calculator
 R script that calculates threshold values for CNVkit in case of impure samples.
 - cnvkit\_threshold\_calculator.R 
 
