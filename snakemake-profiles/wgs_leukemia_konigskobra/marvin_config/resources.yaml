@@ -1,0 +1,55 @@
+default_resources:
+  gres: ""
+  mem_mb: 9216
+  mem_per_cpu: 9216
+  partition: "low"
+  threads: 1
+  time: "24:00:00"
+
+fastp_pe:
+  mem_mb: 147456
+  threads: 8
+
+pbrun_fq2bam:
+  gres: "--gres=gpu:4"
+  mem_mb: 770000
+  mem_per_cpu: 4096
+  partition: "GPU"
+  threads: 40
+  time: "20:00:00"
+
+cnvkit_batch:
+  threads: 10
+  mem_mb": 92160
+
+manta_run_workflow_tn:
+  mem_mb: 368640
+  threads: 40
+
+pbrun_mutectcaller_t:
+  gres: "--gres=gpu:2"
+  mem_mb: 81920
+  mem_per_cpu: 4096
+  partition: "GPU"
+  threads: 20
+  time: "20:00:00"
+
+pbrun_mutectcaller_tn:
+  gres: "--gres=gpu:2"
+  mem_mb: 81920
+  mem_per_cpu: 4096
+  partition: "GPU"
+  threads: 20
+  time: "20:00:00"
+
+mosdepth:
+  mem_mb: 36864
+  threads: 4
+
+spring:
+  mem_mb: 368640
+  threads: 8
+
+vep:
+  mem_mb: 36864
+  threads: 4
