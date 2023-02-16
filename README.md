@@ -27,7 +27,7 @@ ${pipeline}/marvin_config/resources.yaml
 ```
 As of now it contains the configis for the following pipelines:
 - [Niffler](https://github.com/clinical-genomics-uppsala/niffler_small_cnv) :moneybag: :gem:
-- [wgs_leukemia_konigskobra][https://github.com/clinical-genomics-uppsala/wgs_leukemia_konigskobra] :crown: :snake:
+- [wgs_leukemia_konigskobra](https://github.com/clinical-genomics-uppsala/wgs_leukemia_konigskobra) :crown: :snake:
 
 ### Snakemake-rules
 This directory contains snakemake files and (if needed) acompanied scripts located in snakemake/scripts. Snakefile and script should have the same name.
