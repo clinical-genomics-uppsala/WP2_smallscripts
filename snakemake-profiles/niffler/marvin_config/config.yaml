@@ -1,0 +1,115 @@
+---
+
+resources: "resources.yaml"
+samples: "samples.tsv"
+units: "units.tsv"
+output: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/niffler_small_cnv/config/output_files.json"
+
+default_container: "docker://hydragenetics/common:0.1.9"
+
+modules:
+  alignment: "v0.3.1"
+  compression: "v1.1.0"
+  misc: "v0.1.0"
+  prealignment: "v1.0.0"
+  qc: "v0.3.0"
+
+reference:
+  design_bed: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/Bedfiles/Probes_merged_ok_Scilifelab_RUNX1-10kb_v2_1X_TE-91815956_hg38.bed"
+  design_intervals: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/Bedfiles/Probes_merged_ok_Scilifelab_RUNX1-10kb_v2_1X_TE-91815956_hg38.bed"
+  fasta: "/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens.fasta"
+  fai: "/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens.fasta.fai"
+  skip_chrs:
+    - "chr1"
+    - "chr2"
+    - "chr3"
+    - "chr4"
+    - "chr5"
+    - "chr6"
+    - "chr7"
+    - "chr8"
+    - "chr9"
+    - "chr10"
+    - "chr11"
+    - "chr12"
+    - "chr13"
+    - "chr14"
+    - "chr15"
+    - "chr16"
+    - "chr17"
+    - "chr18"
+    - "chr19"
+    - "chr20"
+    - "chr22"
+    - "chrX"
+    - "chrY"
+    - "chrM"
+
+trimmer_software: "fastp_pe"
+
+
+bwa_mem:
+  container: "docker://hydragenetics/bwa_mem:0.7.17"
+  amb: "/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens.fasta.amb"
+  ann: "/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens.fasta.ann"
+  bwt: "/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens.fasta.bwt"
+  pac: "/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens.fasta.pac"
+  sa: "/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens.fasta.sa"
+
+crumble:
+  container: "docker://hydragenetics/crumble:0.9.0"
+  extra: "-O CRAM"
+
+fastp_pe:
+  container: "docker://hydragenetics/fastp:0.20.1"
+
+fastqc:
+  container: "docker://hydragenetics/fastqc:0.11.9"
+
+
+mosdepth_bed:
+  container: "docker://hydragenetics/mosdepth:0.3.2"
+  extra: ""
+
+multiqc:
+  container: "docker://hydragenetics/multiqc:1.11"
+  reports:
+    DNA:
+      included_unit_types: ['T', 'N']
+      qc_files:
+        - "prealignment/fastp_pe/{sample}_{type}_{flowcell}_{lane}_{barcode}_fastp.json"
+        - "qc/fastqc/{sample}_{type}_{flowcell}_{lane}_{barcode}_{read}_fastqc.zip"
+        #- "alignment/picard_mark_duplicates/{sample}_{type}_{chr}.metrics.txt"
+        - "qc/picard_collect_hs_metrics/{sample}_{type}.HsMetrics.txt"
+        - "qc/picard_collect_duplication_metrics/{sample}_{type}.duplication_metrics.txt"
+        - "qc/picard_collect_multiple_metrics/{sample}_{type}.{ext}"
+        - "qc/samtools_stats/{sample}_{type}.samtools-stats.txt"
+        - "qc/mosdepth_bed/{sample}_{type}.mosdepth.summary.txt"
+        - "qc/mosdepth_bed/{sample}_{type}.per-base.bed.gz"
+
+picard_mark_duplicates:
+  container: "docker://hydragenetics/picard:2.25.4"
+
+picard_collect_duplication_metrics:
+  container: "docker://hydragenetics/picard:2.25.4"
+
+picard_collect_hs_metrics:
+  container: "docker://hydragenetics/picard:2.25.4"
+
+picard_collect_multiple_metrics:
+  container: "docker://hydragenetics/picard:2.25.4"
+  output_ext:
+    - "gc_bias.pdf" #collect_gc_bias
+    - "gc_bias.summary_metrics"
+    - "gc_bias.detail_metrics"
+    - "alignment_summary_metrics" # collect_alignment_summary
+    - "insert_size_metrics" # collect_insert_size
+    - "insert_size_histogram.pdf"
+    - "error_summary_metrics" # collect_sequencing_artefact
+    - "bait_bias_detail_metrics"
+    - "bait_bias_summary_metrics"
+    - "pre_adapter_detail_metrics"
+    - "pre_adapter_summary_metrics"
+    - "quality_distribution_metrics" # quality_score_distribution
+    - "quality_distribution.pdf"
+    - "quality_yield_metrics" # quality yield metrics

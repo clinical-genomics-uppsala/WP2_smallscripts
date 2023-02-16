@@ -1,0 +1,16 @@
+---
+
+default_resources:
+  threads: 1
+  time: "12:00:00"
+  mem_mb: 6144
+  mem_per_cpu: 6144
+  partition: "core"
+
+fastp_pe:
+  mem_mb: 147456
+  threads: 8
+
+mosdepth_bed:
+  mem_mb: 36864
+  threads: 4

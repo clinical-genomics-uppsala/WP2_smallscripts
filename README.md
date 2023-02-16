@@ -3,6 +3,7 @@ Random small scripts and pipelines for WP2
 
 ## Directories
 - CNVkit
+- Snakemake-profiles
 - Snakemake-rules
 
 
@@ -16,6 +17,15 @@ R script that calculates threshold values for CNVkit in case of impure samples.
 - cnvkit\_threshold\_calculator.R  
 
 run as `Rscript cnvkit_threshold_calculator.R <ploidy> <purity>
+
+### Snakemake-profiles
+Directory for snakemake profiles to run piplines. Each pipeline should have a folder containg the snakemake profile config.yaml file as well as a folder inside that called marvin_config which contains resources.yaml and config.yaml for running the pipeline in marvin.
+- {pipeline}/config.yaml
+- {pipeline}/marvin_config/config.yaml
+- {pipeline}/marvin_config/resources.yaml
+
+As of now it contains the configis for the following pipelines:
+- [niffler](https://github.com/clinical-genomics-uppsala/niffler_small_cnv)
 
 ### Snakemake-rules
 This directory contains snakemake files and (if needed) acompanied scripts located in snakemake/scripts. Snakefile and script should have the same name.

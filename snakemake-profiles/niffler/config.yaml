@@ -1,0 +1,10 @@
+jobs: 300
+keep-going: True
+restart-times: 1
+rerun-incomplete: True
+use-singularity: True
+drmaa: "-p {resources.partition} -t {resources.time} -n {resources.threads} --mem={resources.mem_mb} --mem-per-cpu={resources.mem_per_cpu} -J {rule} -A wp2 -e slurm/{rule}_%j.err -o slurm/{rule}_%j.out --nodes=1-1"
+drmaa-log-dir: "slurm"
+default-resources: [threads=1, time="04:00:00", partition="low", mem_mb="3074", mem_per_cpu="3074"] 
+singularity-args: "--cleanenv --bind /data,/projects "
+singularity-prefix: "/projects/wp4/nobackup/singularity_cache/"
