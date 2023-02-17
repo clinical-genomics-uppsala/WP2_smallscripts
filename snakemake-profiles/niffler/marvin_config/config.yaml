@@ -16,7 +16,7 @@ modules:
 
 reference:
   design_bed: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/Bedfiles/Probes_merged_ok_Scilifelab_RUNX1-10kb_v2_1X_TE-91815956_hg38.bed"
-  design_intervals: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/Bedfiles/Probes_merged_ok_Scilifelab_RUNX1-10kb_v2_1X_TE-91815956_hg38.bed"
+  design_intervals: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/Bedfiles/Probes_merged_ok_Scilifelab_RUNX1-10kb_v2_1X_TE-91815956_hg38.intervals"
   fasta: "/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens.fasta"
   fai: "/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens.fasta.fai"
   skip_chrs:
