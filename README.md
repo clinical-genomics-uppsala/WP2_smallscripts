@@ -25,7 +25,7 @@ ${pipeline}/config.yaml
 ${pipeline}/marvin_config/config.yaml
 ${pipeline}/marvin_config/resources.yaml
 ```
-As of now it contains the configis for the following pipelines:
+As of now it contains the configs for the following pipelines:
 - [Niffler](https://github.com/clinical-genomics-uppsala/niffler_small_cnv) :moneybag: :gem:
 - [wgs_leukemia_konigskobra](https://github.com/clinical-genomics-uppsala/wgs_leukemia_konigskobra) :crown: :snake:
 
