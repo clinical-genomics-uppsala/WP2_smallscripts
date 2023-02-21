@@ -1,7 +1,7 @@
 resources: "resources.yaml"
 samples: "samples.tsv"
 units: "units.tsv"
-output: "/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/config/output_files.json"
+output: "/home/ninho287/WP4-private-testing/wgs_leukemia_konigskobra/config/output_files.json"
 
 modules:
   alignment: "906d25d0d4791eb5a54cba9954fddf29e27b85dd"
@@ -11,7 +11,7 @@ modules:
   filtering: "b7f4dc3"
   fusions: "12f8354"
   parabricks: "v0.2.0"
-  prealignment: "v0.2.0"
+  prealignment: "v0.5.0"
   qc: "178be68"
   misc: "v0.1.0"
 
@@ -40,6 +40,14 @@ arriba_draw_fusion:
   cytobands: "/beegfs-storage/data/ref_data/arriba/arriba_v2.3.0/database/cytobands_hg38_GRCh38_v2.3.0.tsv"
   gtf: "/beegfs-storage/data/ref_genomes/GRCh38/arriba/Homo_sapiens.GRCh38.93.chr.gtf"
   protein_domains: "/beegfs-storage/data/ref_data/arriba/arriba_v2.3.0/database/protein_domains_hg38_GRCh38_v2.3.0.gff3"
+
+bcftools_SNV:
+  all: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/all_snv_38.bed"
+  aml: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/aml_snv_38_2022-02-25.bed"
+
+bcftools_SV:
+  all: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/all_sv_38.bed"
+  aml: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/aml_sv_38.bed"
 
 bedtools_intersect:
   extra: "-header"
@@ -90,22 +98,14 @@ fastqc:
 filter_vcf:
   germline: "/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/config/config_germline_filter.yaml"
 
-
 fusioncatcher:
   container: "docker://blcdsdockerregistry/fusioncatcher:1.33"
   genome_path: "/beegfs-storage/data/ref_data/fusioncatcher/human_v102/human_v102"
 
-
 manta_run_workflow_t:
-  bed_files:
-    all: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/all_sv_38.bed"
-    aml: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/aml_sv_38.bed"
   container: "docker://hydragenetics/manta:1.6.0"
 
 manta_run_workflow_tn:
-  bed_files:
-    all: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/all_sv_38.bed"
-    aml: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/aml_sv_38.bed"
   container: "docker://hydragenetics/manta:1.6.0"
 
 mosdepth:
@@ -159,7 +159,7 @@ multiqc:
         - "qc/rseqc_gene_body_coverage/{sample}_{type}.geneBodyCoverage.txt"
         - "qc/rseqc_inner_distance/{sample}_{type}.inner_distance.txt"
         - "qc/rseqc_inner_distance/{sample}_{type}.inner_distance_freq.txt"
-        - "prealignment/fastp_pe/{sample}_{flowcell}_{lane}_{barcode}_{type}.json"
+        - "prealignment/fastp_pe/{sample}_{flowcell}_{lane}_{barcode}_{type}_fastp.json"
         - "prealignment/sortmerna/{sample}_{type}.rrna.log"
 
 pbrun_mutectcaller_t:
