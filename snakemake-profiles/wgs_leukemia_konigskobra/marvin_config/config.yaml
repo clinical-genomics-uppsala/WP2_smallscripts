@@ -55,7 +55,7 @@ bedtools_intersect:
 cnvkit_batch:
   container: "docker://hydragenetics/cnvkit:0.9.9"
   method: "wgs"
-  normal_reference: "/beegfs-storage/data/ref_genomes/GRCh38/reference_grasnatter/cnvkit_wgs_pon/Reference_Normal_pool.WGS.221103.bin1000.cnn"
+  normal_reference: "/beegfs-storage/data/ref_genomes/GRCh38/reference_grasnatter/cnvkit_wgs_pon/Reference_Normal_pool.WGS.230301.bin1000.cnn"
 
 cnvkit_call:
   container: "docker://hydragenetics/cnvkit:0.9.9"
