@@ -4,12 +4,14 @@ units: "units.tsv"
 output: "/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/config/output_files.json"
 
 modules:
+  alignment: "906d25d0d4791eb5a54cba9954fddf29e27b85dd"
   annotation: "e58432c3467db31621ab51a16034a026cf2a2c84"
   cnv_sv: "c81d30d"
   compression: "v1.1.0"
   filtering: "b7f4dc3"
+  fusions: "12f8354"
   parabricks: "v0.2.0"
-  prealignment: "v0.2.0"
+  prealignment: "v0.5.0"
   qc: "178be68"
   misc: "v0.1.0"
 
@@ -26,10 +28,31 @@ reference:
 
 trimmer_software: "fastp_pe"
 
+arriba:
+  assembly: "/beegfs-storage/data/ref_genomes/GRCh38/arriba/Homo_sapiens.GRCh38.dna.primary_assembly.fa"
+  blacklist: "/beegfs-storage/data/ref_data/arriba/arriba_v2.3.0/database/blacklist_hg38_GRCh38_v2.3.0.tsv.gz"
+  container: "docker://hydragenetics/arriba:2.3.0"
+  extra: "-p /beegfs-storage/data/ref_data/arriba/arriba_v2.3.0/database/protein_domains_hg38_GRCh38_v2.3.0.gff3 -k /beegfs-storage/data/ref_data/arriba/arriba_v2.3.0/database/known_fusions_hg38_GRCh38_v2.3.0.tsv.gz"
+  gtf: "/beegfs-storage/data/ref_genomes/GRCh38/arriba/Homo_sapiens.GRCh38.93.chr.gtf"
+
+arriba_draw_fusion:
+  container: "docker://hydragenetics/arriba:2.3.0"
+  cytobands: "/beegfs-storage/data/ref_data/arriba/arriba_v2.3.0/database/cytobands_hg38_GRCh38_v2.3.0.tsv"
+  gtf: "/beegfs-storage/data/ref_genomes/GRCh38/arriba/Homo_sapiens.GRCh38.93.chr.gtf"
+  protein_domains: "/beegfs-storage/data/ref_data/arriba/arriba_v2.3.0/database/protein_domains_hg38_GRCh38_v2.3.0.gff3"
+
+bcftools_SNV:
+  all: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/all_snv_38.bed"
+  aml: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/aml_snv_38_2022-02-25.bed"
+
+bcftools_SV:
+  all: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/all_sv_38.bed"
+  aml: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/aml_sv_38.bed"
+
 cnvkit_batch:
   container: "docker://hydragenetics/cnvkit:0.9.9"
   method: "wgs"
-  normal_reference: "/beegfs-storage/data/ref_genomes/GRCh38/reference_grasnatter/cnvkit_wgs_pon/Reference_Normal_pool.WGS.221103.bin1000.cnn"
+  normal_reference: "/beegfs-storage/data/ref_genomes/GRCh38/reference_grasnatter/cnvkit_wgs_pon/Reference_Normal_pool.WGS.230301.bin1000.cnn"
 
 cnvkit_call:
   container: "docker://hydragenetics/cnvkit:0.9.9"
@@ -53,6 +76,9 @@ cnvkit_table:
 cnvkit_vcf:
   container: "docker://python:3.9.9-slim-buster"
 
+config_manta_t:
+  container: "docker://hydragenetics/manta:1.6.0"
+
 config_manta_tn:
   container: "docker://hydragenetics/manta:1.6.0"
 
@@ -69,22 +95,24 @@ fastqc:
 filter_vcf:
   germline: "/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/config/config_germline_filter.yaml"
 
-imagemagick_convert:
-  container: "docker://hydragenetics/imagemagick:7.1.0_20"
+fusioncatcher:
+  container: "docker://blcdsdockerregistry/fusioncatcher:1.33"
+  genome_path: "/beegfs-storage/data/ref_data/fusioncatcher/human_v102/human_v102"
 
-manta_run_workflow_tn:
-  bed_files:
-    all: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/all_sv_38.bed"
-    aml: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/aml_sv_38.bed"
+manta_run_workflow_t:
   container: "docker://hydragenetics/manta:1.6.0"
 
-bedtools_intersect:
-  extra: "-header"
+manta_run_workflow_tn:
+  container: "docker://hydragenetics/manta:1.6.0"
 
 mosdepth:
   by: "500"
   container: "docker://hydragenetics/mosdepth:0.3.2"
   extra: "--fast-mode --no-per-base"
+
+mosdepth_bed:
+  container: "docker://hydragenetics/mosdepth:0.3.2"
+  design_bed: "/beegfs-storage/data/ref_genomes/GRCh38/mosdepth/GRCh38_all_exon_sorted.bed"
 
 multiqc:
   container: "docker://hydragenetics/multiqc:1.11"
@@ -116,11 +144,20 @@ multiqc:
         - "qc/picard_collect_multiple_metrics/{sample}_{type}.quality_distribution.pdf"
         - "qc/picard_collect_wgs_metrics/{sample}_{type}.txt"
         - "qc/samtools_stats/{sample}_{type}.samtools-stats.txt"
-
-pbrun_mutectcaller_tn:
-  bed_files:
-    all: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/all_snv_38.bed"
-    aml: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/aml_snv_38_2022-02-25.bed"
+    RNA:
+      included_unit_types: ["R"]
+      qc_files:
+        - "qc/fastqc/{sample}_{type}_{flowcell}_{lane}_{barcode}_{read}_fastqc.zip"
+        - "qc/mosdepth_bed/{sample}_{type}.mosdepth.global.dist.txt"
+        - "qc/mosdepth_bed/{sample}_{type}.mosdepth.region.dist.txt"
+        - "qc/mosdepth_bed/{sample}_{type}.mosdepth.summary.txt"
+        - "qc/mosdepth_bed/{sample}_{type}.regions.bed.gz"
+        - "qc/mosdepth_bed/{sample}_{type}.regions.bed.gz.csi"
+        - "qc/rseqc_gene_body_coverage/{sample}_{type}.geneBodyCoverage.txt"
+        - "qc/rseqc_inner_distance/{sample}_{type}.inner_distance.txt"
+        - "qc/rseqc_inner_distance/{sample}_{type}.inner_distance_freq.txt"
+        - "prealignment/fastp_pe/{sample}_{flowcell}_{lane}_{barcode}_{type}_fastp.json"
+        - "prealignment/sortmerna/{sample}_{type}.rrna.log"
 
 picard_collect_alignment_summary_metrics:
   container: "docker://hydragenetics/picard:2.25.0"
@@ -150,12 +187,23 @@ picard_collect_multiple_metrics:
 picard_collect_wgs_metrics:
   container: "docker://hydragenetics/picard:2.25.0"
 
+picard_update_vcf_sequence_dictionary:
+  container: "docker://hydragenetics/picard:2.25.0"
+
 pindel_call:
   bedfile: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/aml_pindel_38.bed"
   container: "docker://hydragenetics/pindel:0.2.5b9"
 
 pindel2vcf:
   container: "docker://hydragenetics/pindel:0.2.5b9"
+
+rseqc_gene_body_coverage:
+  bed: "/beegfs-storage/data/ref_genomes/GRCh38/rseqc/hg38_GENCODE.v38.bed"
+  container: "docker://hydragenetics/rseqc:4.0.0"
+
+rseqc_inner_distance:
+  bed: "/beegfs-storage/data/ref_genomes/GRCh38/rseqc/hg38_GENCODE.v38.bed"
+  container: "docker://hydragenetics/rseqc:4.0.0"
 
 sample_order_multiqc:
   sample_sheet: "SampleSheet.csv"
@@ -169,8 +217,29 @@ snpeff:
   container: "docker://hydragenetics/snpeff:5.0"
   db: "/beegfs-storage/data/ref_genomes/GRCh38/snpeff/data/GRCh38.99"
 
+sortmerna:
+  container: "docker://hydragenetics/sortmerna:4.3.4"
+  fasta:
+    - "/beegfs-storage/data/ref_genomes/GRCh38/sortmerna/rfam-5.8s-database-id98.fasta"
+    - "/beegfs-storage/data/ref_genomes/GRCh38/sortmerna/rfam-5s-database-id98.fasta"
+    - "/beegfs-storage/data/ref_genomes/GRCh38/sortmerna/silva-bac-16s-id90.fasta"
+    - "/beegfs-storage/data/ref_genomes/GRCh38/sortmerna/silva-bac-23s-id98.fasta"
+    - "/beegfs-storage/data/ref_genomes/GRCh38/sortmerna/silva-euk-18s-id95.fasta"
+    - "/beegfs-storage/data/ref_genomes/GRCh38/sortmerna/silva-euk-28s-id98.fasta"
+  index: "/beegfs-storage/data/ref_genomes/GRCh38/sortmerna/idx"
+
 spring:
   container: "docker://hydragenetics/spring:1.0.1"
+
+star:
+  container: "docker://hydragenetics/star:2.7.10a"
+  genome_index: "/beegfs-storage/data/ref_genomes/GRCh38/arriba/Homo_sapiens.GRCh38.dna.primary_assembly.star_reference"
+  extra: "--quantMode GeneCounts --sjdbGTFfile /beegfs-storage/data/ref_genomes/GRCh38/arriba/Homo_sapiens.GRCh38.93.chr.gtf --outSAMtype BAM SortedByCoordinate --chimSegmentMin 10 --chimOutType WithinBAM SoftClip --chimJunctionOverhangMin 10 --chimScoreMin 1 --chimScoreDropMax 30 --chimScoreJunctionNonGTAG 0 --chimScoreSeparation 1 --alignSJstitchMismatchNmax 5 -1 5 5 --chimSegmentReadGapMax 3"
+
+star_fusion:
+  container: "docker://trinityctat/starfusion:1.10.1"
+  extra: "--examine_coding_effect"
+  genome_path: "/beegfs-storage/data/ref_genomes/GRCh38/star_fusion/GRCh38_gencode_v37_CTAT_lib_Mar012021.plug-n-play/ctat_genome_lib_build_dir"
 
 vep:
   container: "docker://hydragenetics/vep:105"

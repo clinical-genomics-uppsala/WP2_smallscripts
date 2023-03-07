@@ -6,9 +6,27 @@ default_resources:
   threads: 1
   time: "24:00:00"
 
+arriba:
+  mem_mb: 46080
+  threads: 5
+  time: "72:00:00"
+
 fastp_pe:
   mem_mb: 147456
   threads: 8
+
+fusioncatcher:
+  mem_mb: 92160
+  threads: 10
+  time: "96:00:00"
+
+manta_run_workflow_t:
+  mem_mb: 368640
+  threads: 40
+
+manta_run_workflow_tn:
+  mem_mb: 368640
+  threads: 40
 
 pbrun_fq2bam:
   gres: "--gres=gpu:4"
@@ -17,14 +35,6 @@ pbrun_fq2bam:
   partition: "GPU"
   threads: 40
   time: "20:00:00"
-
-cnvkit_batch:
-  threads: 10
-  mem_mb": 92160
-
-manta_run_workflow_tn:
-  mem_mb: 368640
-  threads: 40
 
 pbrun_mutectcaller_t:
   gres: "--gres=gpu:2"
@@ -46,9 +56,26 @@ mosdepth:
   mem_mb: 36864
   threads: 4
 
+mosdepth_bed:
+  mem_mb: 36864
+  threads: 4
+
 spring:
   mem_mb: 368640
   threads: 8
+
+sortmerna:
+  mem_mb: 73728
+  threads: 8
+
+star:
+  mem_mb: 73728
+  threads: 20
+
+star_fusion:
+  mem_mb: 46080
+  threads: 5
+  time: "72:00:00"
 
 vep:
   mem_mb: 36864
