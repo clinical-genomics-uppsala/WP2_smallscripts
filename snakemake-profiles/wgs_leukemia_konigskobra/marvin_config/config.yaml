@@ -49,9 +49,6 @@ bcftools_SV:
   all: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/all_sv_38.bed"
   aml: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/aml_sv_38.bed"
 
-bedtools_intersect:
-  extra: "-header"
-
 cnvkit_batch:
   container: "docker://hydragenetics/cnvkit:0.9.9"
   method: "wgs"

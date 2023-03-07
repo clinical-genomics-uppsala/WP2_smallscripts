@@ -11,10 +11,6 @@ arriba:
   threads: 5
   time: "72:00:00"
 
-cnvkit_batch:
-  threads: 10
-  mem_mb: 92160
-
 fastp_pe:
   mem_mb: 147456
   threads: 8
