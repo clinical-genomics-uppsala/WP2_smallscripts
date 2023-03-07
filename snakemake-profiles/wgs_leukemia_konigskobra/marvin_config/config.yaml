@@ -159,16 +159,6 @@ multiqc:
         - "prealignment/fastp_pe/{sample}_{flowcell}_{lane}_{barcode}_{type}_fastp.json"
         - "prealignment/sortmerna/{sample}_{type}.rrna.log"
 
-pbrun_mutectcaller_t:
-  bed_files:
-    all: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/all_snv_38.bed"
-    aml: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/aml_snv_38_2022-02-25.bed"
-
-pbrun_mutectcaller_tn:
-  bed_files:
-    all: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/all_snv_38.bed"
-    aml: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/aml_snv_38_2022-02-25.bed"
-
 picard_collect_alignment_summary_metrics:
   container: "docker://hydragenetics/picard:2.25.0"
 
