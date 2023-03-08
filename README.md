@@ -14,12 +14,17 @@ This directory contains a snakemake file and a python script to run CNVkit on Tw
 - `vcf2excel_cnvkit.py`
 
 R script that calculates threshold values for CNVkit in case of impure samples.
-- `cnvkit_threshold_calculator.R` 
+- `cnvkit_threshold_calculator.R`
 
 run as `Rscript cnvkit_threshold_calculator.R <ploidy> <purity>`
 
+### Python scripts
+This directory contains useful python scripts
+- `wgs_rename_samples.py`: renames samples in `samples.tsv $1` and `units.tsv $2` to pedegree_id from a `"SampleSheet" $3` and does some checks on SampleSheet. Outputs a `samples_ped.tsv` and `units_ped.tsv` file.
+
+
 ### Snakemake-profiles
-Directory for snakemake profiles to run piplines. Each pipeline should have a folder containg the snakemake profile config.yaml file as well as a folder inside that called marvin_config which contains resources.yaml and config.yaml for running the pipeline in marvin.
+Directory for snakemake profiles to run piplines. Each pipeline should have a folder containg the snakemake profile config.yaml file as well as a folder inside that called marvin_config which contains resources.yaml and config.yaml for running the pipeline on marvin.
 ```
 ${pipeline}/config.yaml
 ${pipeline}/marvin_config/config.yaml
@@ -33,4 +38,3 @@ As of now it contains the configs for the following pipelines:
 This directory contains snakemake files and (if needed) acompanied scripts located in snakemake/scripts. Snakefile and script should have the same name.
 - `{snakerule}.smk`
 - `scripts/{snakerule}.{ext}`
-
