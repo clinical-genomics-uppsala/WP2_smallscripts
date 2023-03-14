@@ -1,0 +1,35 @@
+bams:
+  sample_name: "/path/to/bam" # if TM sample_name is sample_seqid-dedup
+
+vcf:
+  sample_name: "/path/to/gvcf"
+
+cnvkit_batch:
+  normalpool: "/path/to/normal/pool"
+  extra: "any extra parameters for rule"
+
+cnvkit_diagram:
+  extra: "any extra parameters for rule"
+
+cnvkit_diagram:
+  extra: "any extra parameters for rule"
+
+cnvkit_scatter:
+  extra: "any extra parameters for rule"
+
+cnvkit_call:
+  tc:
+    sample_name: tc #float for samples with known tc
+  extra: "any extra parameters for rule"
+
+cnvkit_scatter_loh:
+  extra: "any extra parameters for rule"
+
+cnvkit_scatter_cna_genes:
+  cna:
+    "chr21": "RUNX1" # or other chr: genenames in bedfile to be marked on scatter
+  extra: "any extra parameters for rule"
+
+vcf2excel:
+  cnvkitartefact: "/path/to/cnvkit/artefactfile"
+  cyto: "/path/to/file/with/cytocoordinates"
