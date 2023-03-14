@@ -60,6 +60,9 @@ mosdepth_bed:
   mem_mb: 36864
   threads: 4
 
+rseqc_gene_body_coverage:
+  time: "48:00:00"
+
 spring:
   mem_mb: 368640
   threads: 8
