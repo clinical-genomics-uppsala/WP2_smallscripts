@@ -16,8 +16,8 @@ fastp_pe:
   threads: 8
 
 fusioncatcher:
-  mem_mb: 92160
-  threads: 10
+  mem_mb: 184320 
+  threads: 20
   time: "96:00:00"
 
 manta_run_workflow_t:
@@ -38,7 +38,7 @@ pbrun_fq2bam:
 
 pbrun_mutectcaller_t:
   gres: "--gres=gpu:4"
-  mem_mb: 81920
+  mem_mb: 770000 
   mem_per_cpu: 4096
   partition: "GPU"
   threads: 40
@@ -46,7 +46,7 @@ pbrun_mutectcaller_t:
 
 pbrun_mutectcaller_tn:
   gres: "--gres=gpu:4"
-  mem_mb: 81920
+  mem_mb: 770000
   mem_per_cpu: 4096
   partition: "GPU"
   threads: 40
