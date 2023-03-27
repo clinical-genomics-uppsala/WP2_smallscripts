@@ -97,7 +97,7 @@ filter_vcf:
   germline: "/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/config/config_germline_filter.yaml"
 
 fusioncatcher:
-  container: "docker://blcdsdockerregistry/fusioncatcher:1.33"
+  container: "docker://hydragenetics/fusioncatcher:1.33"
   genome_path: "/beegfs-storage/data/ref_data/fusioncatcher/human_v102/human_v102"
 
 manta_run_workflow_t:
