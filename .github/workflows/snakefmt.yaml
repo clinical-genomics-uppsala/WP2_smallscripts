@@ -1,4 +1,6 @@
 name: Snakefmt
+env:
+  DEFAULT_BRANCH: main
 
 # Controls when the action will run.
 on:
