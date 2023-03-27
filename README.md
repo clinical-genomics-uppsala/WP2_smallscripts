@@ -16,13 +16,11 @@ This directory contains a snakemake file and a python script to run CNVkit on Tw
 - `vcf2excel_cnvkit.py`
 
 R script that calculates threshold values for CNVkit in case of impure samples.
-- `cnvkit_threshold_calculator.R`
-
-run as `Rscript cnvkit_threshold_calculator.R <ploidy> <purity>`
+- `cnvkit_threshold_calculator.R`: run as `Rscript cnvkit_threshold_calculator.R <ploidy> <purity>`
 
 ### Pipeline-starting-scripts
 A folder for bash (or similar) scripts used by Stanley to start clinical pipelines.
-- `start_bcr_abl1.sh`: BCR::ABL1 fusion detection pipline. Stand in sequence folder inside INBOX. Need sequenceid as `$1`.
+- `start_bcr_abl1.sh`: BCR::ABL1 fusion detection pipline. Stand in sequence folder inside INBOX. Run as `bash start_bcr_abl1.sh <sequenceid>`
 
 ### Python-scripts
 This directory contains useful python scripts
