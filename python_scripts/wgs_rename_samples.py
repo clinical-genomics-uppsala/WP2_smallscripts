@@ -21,7 +21,7 @@ def test_samplesheet_line(samplesheet_line):
         sys.exit("Cell type is neither T|N|Heltranskriptom for sample " + samplesheet_line[0])
     # sex
     sex = line[2].split("_")[1]
-    if sex.upper() != "M" and sex.upper() != "F" and sex.upper() != "O":
+    if sex.upper() != "M" and sex.upper() != "F" and sex.upper() != "O" and sex.upper() != "NA":
         sys.exit("Sex is neither M|F|O for sample " + samplesheet_line[0])
     return True
 
