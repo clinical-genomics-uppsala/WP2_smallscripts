@@ -3,6 +3,8 @@ Random small scripts and pipelines for WP2
 
 ## Directories
 - CNVkit
+- Pipeline starting scripts
+- Python scripts
 - Snakemake-profiles
 - Snakemake-rules
 
@@ -18,7 +20,11 @@ R script that calculates threshold values for CNVkit in case of impure samples.
 
 run as `Rscript cnvkit_threshold_calculator.R <ploidy> <purity>`
 
-### Python scripts
+### Pipeline-starting-scripts
+A folder for bash (or similar) scripts used by Stanley to start clinical pipelines.
+- `start_bcr_abl1.sh`: BCR::ABL1 fusion detection pipline. Stand in sequence folder inside INBOX. Need sequenceid as `$1`.
+
+### Python-scripts
 This directory contains useful python scripts
 - `wgs_rename_samples.py`: renames samples in `samples.tsv $1` and `units.tsv $2` to pedegree_id from a `"SampleSheet" $3` and does some checks on SampleSheet. Outputs a `samples_ped.tsv` and `units_ped.tsv` file.
 
@@ -31,6 +37,7 @@ ${pipeline}/marvin_config/config.yaml
 ${pipeline}/marvin_config/resources.yaml
 ```
 As of now it contains the configs for the following pipelines:
+- [BCR_ABL1](https://github.com/clinical-genomics-uppsala/bcr_abl_pipeline/) :snake:
 - [Niffler](https://github.com/clinical-genomics-uppsala/niffler_small_cnv) :moneybag: :gem:
 - [wgs_leukemia_konigskobra](https://github.com/clinical-genomics-uppsala/wgs_leukemia_konigskobra) :crown: :snake:
 
