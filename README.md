@@ -25,6 +25,7 @@ A folder for bash (or similar) scripts used by Stanley to start clinical pipelin
 ### Python-scripts
 This directory contains useful python scripts
 - `wgs_rename_samples.py`: renames samples in `samples.tsv $1` and `units.tsv $2` to pedegree_id from a `"SampleSheet" $3` and does some checks on SampleSheet. Outputs a `samples_ped.tsv` and `units_ped.tsv` file.
+- `get_pathogenic_variants.py`:  file for extracting pathogenic (and likley path osv) and vus variants from a detected variant list (e.g. `/projects/wp2/nobackup/Twist_Myeloid/DetectedVariants/twistVariants-NewDesign2021-10.txt` for TM). `python3 get_pathogenic_variants.py variantlist.txt <basename of output>`
 
 
 ### Snakemake-profiles
