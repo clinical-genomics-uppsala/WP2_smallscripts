@@ -64,6 +64,17 @@ cnvkit_diagram:
 cnvkit_scatter:
   container: "docker://hydragenetics/cnvkit:0.9.9"
   extra: "-c {locus} --y-min -5 --y-max 5"
+  cna:
+    "chr4": "DUX4"
+    "chr5": "EBF1"
+    "chr7": "IKZF1"
+    "chr9": "CDKN2A,CDKN2B,PAX5"
+    "chr11": "KMT2A"
+    "chr12": "BTG1,ETV6,ZNF384"
+    "chr13": "RB1"
+    "chr17": "TP53"
+    "chr21": "ERG,RUNX1"
+    "chrX": "CRLF2,CSF2RA,IL3RA,P2RY8"
 
 cnvkit_scatter_whole:
   container: "docker://hydragenetics/cnvkit:0.9.9"
