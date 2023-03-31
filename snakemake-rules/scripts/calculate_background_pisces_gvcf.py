@@ -8,13 +8,13 @@ background_dict = {}
 
 
 for file_name in gvcf_files:
-    sample_name = file_name.split("/")[-1].split(".")[0] # ? {sample}_{type}
+    sample_name = file_name.split("/")[-1].split(".")[0]  # ? {sample}_{type}
     print(sample_name)
     vcf_in = VariantFile(file_name)
     for record in vcf_in.fetch():
-        #ska alla positioner med? eller bara PASS och SB?
+        # ska alla positioner med? eller bara PASS och SB?
         key = str(record.contig) + "_" + str(record.pos)
-        if record.samples[sample_name]["DP"] != 0: #hogre grans? samma som mindp?
+        if record.samples[sample_name]["DP"] != 0:  # hogre grans? samma som mindp?
             if key in background_dict:
                 # if variant higher af than X should we have opposite? 1-VF?
                 background_dict[key].append(record.samples[sample_name]["VF"][0])
@@ -37,7 +37,7 @@ with open(snakemake.output.background_file, "w+") as background_file:
             median_five_sd = "-"
             if len(background_five_under) >= 4:
                 stdev_background = statistics.stdev(background_five_under)
-                median_five_sd = median_background + 5* stdev_background
+                median_five_sd = median_background + 5 * stdev_background
             outline = [
                     key.split("_")[0],
                     key.split("_")[1],
