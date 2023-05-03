@@ -20,6 +20,14 @@ fusioncatcher:
   threads: 20
   time: "96:00:00"
 
+gatk_cnv_collect_allelic_counts:
+  mem_mb: 46080 
+  threads: 5
+
+gatk_cnv_model_segments:
+  mem_mb: 46080
+  threads: 5
+
 manta_run_workflow_t:
   mem_mb: 368640
   threads: 40
@@ -64,7 +72,7 @@ rseqc_gene_body_coverage:
   time: "48:00:00"
 
 spring:
-  mem_mb: 368640
+  mem_mb: 36864
   threads: 8
 
 sortmerna:
