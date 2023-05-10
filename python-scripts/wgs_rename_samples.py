@@ -17,7 +17,8 @@ def test_samplesheet_line(samplesheet_line):
         sys.exit("Description field not 5 types for "+"\t".join(samplesheet_line))
     # type
     cell_type = samplesheet_line[2].split("_")[0]
-    if cell_type.lower() != "t" and cell_type.lower() != "n" and cell_type.lower() != "heltranskriptom" and cell_type.lower() != "r":
+    if cell_type.lower() != "t" and cell_type.lower() != "n" and cell_type.lower() != "heltranskriptom"
+    and cell_type.lower() != "r":
         sys.exit("Cell type is neither T|N|Heltranskriptom for sample " + samplesheet_line[0])
     # sex
     sex = line[2].split("_")[1]
