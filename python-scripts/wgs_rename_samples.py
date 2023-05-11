@@ -19,7 +19,7 @@ def test_samplesheet_line(samplesheet_line):
     cell_type = samplesheet_line[2].split("_")[0]
     if cell_type.lower() != "t" and cell_type.lower() != "n" and cell_type.lower() != "heltranskriptom"
     and cell_type.lower() != "r":
-        sys.exit("Cell type is neither T|N|Heltranskriptom for sample " + samplesheet_line[0])
+        sys.exit("Cell type is neither T|N|R|Heltranskriptom for sample " + samplesheet_line[0])
     # sex
     sex = line[2].split("_")[1]
     if sex.upper() != "M" and sex.upper() != "F" and sex.upper() != "O" and sex.upper() != "NA":
