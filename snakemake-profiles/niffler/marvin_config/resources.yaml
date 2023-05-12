@@ -8,9 +8,9 @@ default_resources:
   partition: "core"
 
 fastp_pe:
-  mem_mb: 147456
+  mem_mb: 49152
   threads: 8
 
 mosdepth_bed:
-  mem_mb: 36864
+  mem_mb: 24576
   threads: 4
