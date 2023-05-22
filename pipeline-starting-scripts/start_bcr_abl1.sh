@@ -3,6 +3,8 @@
 # borde gora en specifik for abl pipeline!
 source /projects/wp4/nobackup/workspace/arielle_test/twist/hydra/Workarea/220222_Test/venv/bin/activate
 module load singularity/3.4.2 slurm-drmaa/1.1.1
+#zappa
+#module load singularity/3.11.0 slurm-drmaa/1.1.3
 echo "Module loaded"
 seqrun=$1
 snakemake_profile=/projects/wp2/nobackup/WP2_smallscripts/snakemake-profiles/bcr_abl/
