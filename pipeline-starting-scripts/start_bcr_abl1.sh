@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # borde gora en specifik for abl pipeline!
-source /projects/wp4/nobackup/workspace/arielle_test/twist/hydra/Workarea/220222_Test/venv/bin/activate
+source /projects/wp2/nobackup/BCR_ABL1/Bin/venv_bcr_abl/bin/activate
 module load singularity/3.11.0 slurm-drmaa/1.1.3
 echo "Module loaded"
 seqrun=$1
