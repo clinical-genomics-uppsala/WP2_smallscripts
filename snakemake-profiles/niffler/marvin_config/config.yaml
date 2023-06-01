@@ -1,5 +1,4 @@
 ---
-
 resources: "resources.yaml"
 samples: "samples.tsv"
 units: "units.tsv"
@@ -9,16 +8,22 @@ default_container: "docker://hydragenetics/common:0.1.9"
 
 modules:
   alignment: "v0.3.1"
+  annotation: "v0.3.0"
+  cnv_sv: "v0.3.1"
   compression: "v1.1.0"
-  misc: "v0.1.0"
+  filtering: "v0.1.0"
+  misc: "v0.2.0"
   prealignment: "v1.0.0"
+  snv_indels: "v0.3.0"
   qc: "v0.3.0"
 
 reference:
-  design_bed: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/Bedfiles/Probes_merged_ok_Scilifelab_RUNX1-10kb_v2_1X_TE-91815956_hg38.bed"
-  design_intervals: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/Bedfiles/Probes_merged_ok_Scilifelab_RUNX1-10kb_v2_1X_TE-91815956_hg38.intervals"
   fasta: "/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens.fasta"
   fai: "/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens.fasta.fai"
+  design_bed: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/Bedfiles/Probes_merged_ok_Scilifelab_RUNX1-10kb_v2_1X_TE-91815956_hg38.bed"
+  design_bed_gz: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/Bedfiles/Probes_merged_ok_Scilifelab_RUNX1-10kb_v2_1X_TE-91815956_hg38.bed.gz"
+  design_intervals: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/Bedfiles/Probes_merged_ok_Scilifelab_RUNX1-10kb_v2_1X_TE-91815956_hg38.intervals"
+  design_intervals_gatk_cnv: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Workarea/CNVkitNormals/230301/references/preprocess_intervals/Probes_merged_ok_Scilifelab_RUNX1-10kb_v2_1X_TE-91815956_hg38.bed.preprocessed.interval_list"
   skip_chrs:
     - "chr1"
     - "chr2"
@@ -47,6 +52,14 @@ reference:
 
 trimmer_software: "fastp_pe"
 
+annotate_cnv:
+  runx1_exons: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/Bedfiles/RUNX1_NM_001754.5.bed"
+
+bcbio_variation_recall_ensemble:
+  container: "docker://gmsuppsala/somatic:develop"
+  callers:
+    - gatk_mutect2
+    - vardict
 
 bwa_mem:
   container: "docker://hydragenetics/bwa_mem:0.7.17"
@@ -55,6 +68,24 @@ bwa_mem:
   bwt: "/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens.fasta.bwt"
   pac: "/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens.fasta.pac"
   sa: "/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens.fasta.sa"
+
+cnvkit_batch:
+  container: "docker://hydragenetics/cnvkit:0.9.9"
+  normal_reference: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Workarea/CNVkitNormals/230301/references/cnvkit_build_normal_reference/cnvkit.PoN.cnn"
+  method: "hybrid"
+
+cnvkit_call:
+  container: "docker://hydragenetics/cnvkit:0.9.9"
+
+cnv_html_report:
+  template: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/niffler_small_cnv/config/cnv_report_template.html"
+  cnv_vcf:
+    - annotation: runx1_exons
+      filter: cnv_hardfilter
+
+cnvkit_scatter:
+  container: "docker://hydragenetics/cnvkit:0.9.9"
+  extra: "-c chr21 --y-min -5 --y-max 5"
 
 crumble:
   container: "docker://hydragenetics/crumble:0.9.0"
@@ -66,6 +97,42 @@ fastp_pe:
 fastqc:
   container: "docker://hydragenetics/fastqc:0.11.9"
 
+filter_vcf:
+  germline: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/niffler_small_cnv/config/config_germline_filter.yaml"
+  snvindels: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/niffler_small_cnv/config/config_snvindels_softfilter.yaml"
+  cnv_hardfilter: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/niffler_small_cnv/config/config_cnv_hardfilter.yaml"
+
+gatk_call_copy_ratio_segments:
+  container: "docker://hydragenetics/gatk4:4.1.9.0"
+
+gatk_collect_allelic_counts:
+  container: "docker://hydragenetics/gatk4:4.1.9.0"
+  SNP_interval: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Workarea/CNVkitNormals/230301/references/preprocess_intervals/Probes_merged_ok_Scilifelab_RUNX1-10kb_v2_1X_TE-91815956_hg38.bed.preprocessed.interval_list" #gnomad eller cnvbackbone
+
+gatk_collect_read_counts:
+  container: "docker://hydragenetics/gatk4:4.1.9.0"
+
+gatk_denoise_read_counts:
+  container: "docker://hydragenetics/gatk4:4.1.9.0"
+  normal_reference: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Workarea/CNVkitNormals/230301/references/create_read_count_panel_of_normals/gatk_cnv_panel_of_normal.hdf5"
+
+gatk_model_segments:
+  container: "docker://hydragenetics/gatk4:4.1.9.0"
+
+gatk_mutect2:
+  container: "docker://hydragenetics/gatk4:4.2.2.0"
+
+gatk_mutect2_filter:
+  container: "docker://hydragenetics/gatk4:4.2.2.0"
+
+gatk_mutect2_merge_stats:
+  container: "docker://hydragenetics/gatk4:4.2.2.0"
+
+manta_config_t:
+  container: "docker://hydragenetics/manta:1.6.0"
+
+manta_run_workflow_t:
+  container: "docker://hydragenetics/manta:1.6.0"
 
 mosdepth_bed:
   container: "docker://hydragenetics/mosdepth:0.3.2"
@@ -76,6 +143,7 @@ multiqc:
   reports:
     DNA:
       included_unit_types: ['T', 'N']
+      config: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/niffler_small_cnv/config/multiqc_config.yaml"
       qc_files:
         - "prealignment/fastp_pe/{sample}_{type}_{flowcell}_{lane}_{barcode}_fastp.json"
         - "qc/fastqc/{sample}_{type}_{flowcell}_{lane}_{barcode}_{read}_fastqc.zip"
@@ -86,6 +154,8 @@ multiqc:
         - "qc/samtools_stats/{sample}_{type}.samtools-stats.txt"
         - "qc/mosdepth_bed/{sample}_{type}.mosdepth.summary.txt"
         - "qc/mosdepth_bed/{sample}_{type}.per-base.bed.gz"
+        - "qc/mosdepth_bed/{sample}_{type}.mosdepth.region.dist.txt"
+        - "qc/mosdepth_bed/{sample}_{type}.mosdepth.global.dist.txt"
 
 picard_mark_duplicates:
   container: "docker://hydragenetics/picard:2.25.4"
@@ -113,3 +183,29 @@ picard_collect_multiple_metrics:
     - "quality_distribution_metrics" # quality_score_distribution
     - "quality_distribution.pdf"
     - "quality_yield_metrics" # quality yield metrics
+
+svdb_merge:
+  tc_method:
+    - name: pathology
+      cnv_caller:
+        - cnvkit
+        - gatk
+  container: "docker://hydragenetics/svdb:2.6.0"
+
+svdb_query:
+  container: "docker://hydragenetics/svdb:2.6.0"
+  db_string: "--db /projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Workarea/CNVkitNormals/230301/references/svdb_export/svdb_cnv.vcf --out_frq Normal_AF --out_occ Normal_OCC"
+
+vardict:
+  container: "docker://hydragenetics/vardict:1.8.3"
+
+vep:
+  container: "docker://hydragenetics/vep:105"
+  vep_cache: "/data/ref_genomes/VEP/"
+  extra: "--assembly GRCh38 --check_existing --pick --sift b --polyphen b --ccds --uniprot --hgvs --symbol --numbers --domains --regulatory --canonical --protein --biotype --uniprot --tsl --appris --gene_phenotype --af --af_1kg --af_gnomad --max_af --pubmed --variant_class"
+
+vt_decompose:
+  container: "docker://hydragenetics/vt:2015.11.10"
+
+vt_normalize:
+  container: "docker://hydragenetics/vt:2015.11.10"
