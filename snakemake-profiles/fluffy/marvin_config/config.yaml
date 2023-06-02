@@ -1,7 +1,7 @@
 resources: "resources.yaml"
 samples: "samples.tsv"
 units: "units.tsv"
-output: "/home/ninho287/WP4-private-testing/wgs_leukemia_konigskobra/config/output_files.json"
+output: "/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/config/output_files.json"
 
 modules:
   alignment: "906d25d0d4791eb5a54cba9954fddf29e27b85dd"
