@@ -30,6 +30,7 @@ reference:
   wgs_intervals: "/beegfs-storage/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens.wgs.interval_list"
 
 trimmer_software: "fastp_pe"
+aligner: "bwa_gpu"
 
 arriba:
   assembly: "/beegfs-storage/data/ref_genomes/GRCh38/arriba/Homo_sapiens.GRCh38.dna.primary_assembly.fa"
