@@ -3,6 +3,7 @@ keep-going: True
 restart-times: 1
 rerun-incomplete: True
 max-jobs-per-second: 100
+resources: load=100
 max-status-checks-per-second: 100
 use-singularity: True
 snakefile: "/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/workflow/Snakefile"
