@@ -5,15 +5,25 @@ default_resources:
   partition: "low"
   threads: 1
   time: "24:00:00"
+  load: 1
+
+_copy:
+  partition: "low_bkup"
+  time: "1:00:00"
 
 arriba:
   mem_mb: 30720
   threads: 5
   time: "72:00:00"
+  partition: "low_bkup"
 
 fastp_pe:
   mem_mb: 49152
   threads: 8
+
+fastqc:
+  load: 25
+  partition: "low_bkup"
 
 fusioncatcher:
   mem_mb: 122880 
@@ -23,6 +33,7 @@ fusioncatcher:
 gatk_cnv_collect_allelic_counts:
   mem_mb: 30720 
   threads: 5
+  partition: "low_bkup"
 
 gatk_cnv_model_segments:
   mem_mb: 30720
@@ -40,15 +51,15 @@ pbrun_fq2bam:
   gres: "--gres=gres:gpu:4"
   mem_mb: 770000
   mem_per_cpu: 4096
-  partition: "GPU"
+  partition: "GPU_low"
   threads: 40
-  time: "20:00:00"
+  time: "12:00:00"
 
 pbrun_mutectcaller_t:
   gres: "--gres=gres:gpu:4"
   mem_mb: 770000 
   mem_per_cpu: 4096
-  partition: "GPU"
+  partition: "GPU_low"
   threads: 40
   time: "20:00:00"
 
@@ -56,17 +67,19 @@ pbrun_mutectcaller_tn:
   gres: "--gres=gres:gpu:4"
   mem_mb: 770000
   mem_per_cpu: 4096
-  partition: "GPU"
+  partition: "GPU_low"
   threads: 40
   time: "20:00:00"
 
 mosdepth:
   mem_mb: 24576
   threads: 4
+  partition: "low_bkup"
 
 mosdepth_bed:
   mem_mb: 24576
   threads: 4
+  partition: "low_bkup"
 
 rseqc_gene_body_coverage:
   time: "48:00:00"
@@ -74,6 +87,8 @@ rseqc_gene_body_coverage:
 spring:
   mem_mb: 49152
   threads: 8
+  load: 10
+  partition: "low_bkup"
 
 sortmerna:
   mem_mb: 49152
@@ -91,3 +106,4 @@ star_fusion:
 vep:
   mem_mb: 24576
   threads: 4
+  partition: "low_bkup"
