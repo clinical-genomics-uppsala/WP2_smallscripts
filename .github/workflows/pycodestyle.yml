@@ -28,6 +28,6 @@ jobs:
         run: |
           pip install -r requirements.test.txt
       - name: Check python syntax lib
-        run: pycodestyle --max-line-length=130 --statistics python-scripts/
+        run: pycodestyle --max-line-length=130 --statistics small-scripts/
       - name: Check python syntax lib snakemake folder
         run: pycodestyle --max-line-length=130 --statistics snakemake-rules/scripts/

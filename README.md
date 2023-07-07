@@ -4,7 +4,7 @@ Random small scripts and pipelines for WP2
 ## Directories
 - CNVkit
 - Pipeline starting scripts
-- Python scripts
+- Small scripts
 - Snakemake-profiles
 - Snakemake-rules
 
@@ -22,10 +22,14 @@ R script that calculates threshold values for CNVkit in case of impure samples.
 A folder for bash (or similar) scripts used by Stanley to start clinical pipelines.
 - `start_bcr_abl1.sh`: BCR::ABL1 fusion detection pipline. Stand in sequence folder inside INBOX. Run as `bash start_bcr_abl1.sh <sequenceid>`
 
-### Python-scripts
-This directory contains useful python scripts
+### Small scripts
+This directory contains useful small scripts
 - `wgs_rename_samples.py`: renames samples in `samples.tsv $1` and `units.tsv $2` to pedegree_id from a `"SampleSheet" $3` and does some checks on SampleSheet. Outputs a `samples_ped.tsv` and `units_ped.tsv` file.
 - `get_pathogenic_variants.py`:  file for extracting pathogenic (and likley path osv) and vus variants from a detected variant list (e.g. `/projects/wp2/nobackup/Twist_Myeloid/DetectedVariants/twistVariants-NewDesign2021-10.txt` for TM). `python3 get_pathogenic_variants.py variantlist.txt <basename of output>`
+- `somalier_relate.sh`: script to run `[somalier](https://github.com/brentp/somalier/) relate` from bam on hg19 samples. If needed, [change sites file to hg38](https://github.com/brentp/somalier/releases/tag/v0.2.17). Takes one infolder and the basename for outfiles. Is very quick!
+    ```
+    $> sbatch -A wp2 -p core -n 1 -t 12:00:00 -J somalier WP2_smallscripts/small_scripts/somalier_relate.sh bam_files/ somalier_results
+    ```
 
 
 ### Snakemake-profiles
