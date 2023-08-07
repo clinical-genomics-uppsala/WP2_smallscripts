@@ -82,12 +82,13 @@ with open(samples_file.split(".")[0] + "_ped.tsv", 'w+') as out_samples:
                 header = False
             else:
                 line = lline.strip().split("\t")
-                ped_name = samples[line[0]]["Pedegree_id"]
-                tumor_content = line[1]
-                project = samples[line[0]]["Project"]
-                sex = samples[line[0]]["Sex"]
+                if line[0] in samples.keys():
+                    ped_name = samples[line[0]]["Pedegree_id"]
+                    tumor_content = line[1]
+                    project = samples[line[0]]["Project"]
+                    sex = samples[line[0]]["Sex"]
 
-                outlines.append([ped_name.upper(), tumor_content, project, sex])
+                    outlines.append([ped_name.upper(), tumor_content, project, sex])
 
     outlines.sort()
     for outline in [outlines for outlines, _ in itertools.groupby(outlines)]:
@@ -103,9 +104,10 @@ with open(units_file.split(".")[0]+"_ped.tsv", "w+") as out_units:
                 header = False
             else:
                 line = lline.strip().split("\t")
-                ped_name = samples[line[0]]["Pedegree_id"]
-                cell_type = samples[line[0]]["Type"]
-                if cell_type.lower() == "heltranskriptom" or cell_type.lower() == "r":
-                    cell_type = "R"
-                outline = [ped_name.upper(), cell_type.upper()]+line[2:]
-                out_units.write("\t".join(outline)+"\n")
+                if line[0] in samples.keys():
+                    ped_name = samples[line[0]]["Pedegree_id"]
+                    cell_type = samples[line[0]]["Type"]
+                    if cell_type.lower() == "heltranskriptom" or cell_type.lower() == "r":
+                        cell_type = "R"
+                    outline = [ped_name.upper(), cell_type.upper()]+line[2:]
+                    out_units.write("\t".join(outline)+"\n")
