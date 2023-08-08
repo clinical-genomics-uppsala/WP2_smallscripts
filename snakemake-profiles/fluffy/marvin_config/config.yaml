@@ -1,11 +1,12 @@
 resources: "resources.yaml"
 samples: "samples.tsv"
 units: "units.tsv"
-output: "/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/config/output_files.json"
+output: "/home/ninho287/testing/wgs_leukemia_konigskobra/config/output_files.json"
+#output: "/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/config/output_files.json"
 
 modules:
   alignment: "906d25d0d4791eb5a54cba9954fddf29e27b85dd"
-  annotation: "e58432c3467db31621ab51a16034a026cf2a2c84"
+  annotation: "3a05574"
   cnv_sv: "v0.4.1"
   compression: "v1.1.0"
   filtering: "b7f4dc3"
@@ -13,6 +14,7 @@ modules:
   parabricks: "v0.2.0"
   prealignment: "v0.5.0"
   qc: "v0.3.0"
+  reports: "7c8b8c5"
   misc: "v0.1.0"
   sentieon: "b002d39"
 
@@ -28,10 +30,15 @@ reference:
   genome_dir: "/beegfs-storage/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens_star/" # req by align not used
   sites: "/beegfs-storage/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens.known_indels.vcf.gz"
   wgs_intervals: "/beegfs-storage/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens.wgs.interval_list"
+  skip_chrs:
+    - chrM
 
 trimmer_software: "fastp_pe"
 
 aligner: "bwa_gpu"
+
+annotate_cnv:
+  cna_exons: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/hg38_CNA.bed" 
 
 arriba:
   assembly: "/beegfs-storage/data/ref_genomes/GRCh38/arriba/Homo_sapiens.GRCh38.dna.primary_assembly.fa"
@@ -53,6 +60,14 @@ bcftools_SNV:
 bcftools_SV:
   all: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/all_sv_38.bed"
   aml: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/aml_sv_38.bed"
+
+cnv_html_report:
+  show_table: true
+  template_dir: "/home/ninho287/testing/wgs_leukemia_konigskobra/config/cnv_report_template"
+  #template_dir: "/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/config/cnv_report_template"
+  cnv_vcf:
+    - annotation: cna_exons
+      filter: cnv_hardfilter
 
 cnvkit_batch:
   container: "docker://hydragenetics/cnvkit:0.9.9"
@@ -93,12 +108,6 @@ cnvkit_table:
 cnvkit_vcf:
   container: "docker://python:3.9.9-slim-buster"
 
-manta_config_t:
-  container: "docker://hydragenetics/manta:1.6.0"
-
-manta_config_tn:
-  container: "docker://hydragenetics/manta:1.6.0"
-
 crumble:
   container: "docker://hydragenetics/crumble:0.8.3"
   extra: "-O CRAM"
@@ -111,6 +120,8 @@ fastqc:
 
 filter_vcf:
   germline: "/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/config/config_germline_filter.yaml"
+  #cnv_hardfilter: "/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/config/config_cnv_hardfilter.yaml"
+  cnv_hardfilter: "/home/ninho287/testing/wgs_leukemia_konigskobra/config/config_cnv_hardfilter.yaml"
 
 fusioncatcher:
   container: "docker://hydragenetics/fusioncatcher:1.33"
@@ -133,6 +144,12 @@ gatk_cnv_denoise_read_counts_by_sex:
   container: "docker://hydragenetics/gatk4:4.2.2.0"
   pon_female: "/beegfs-storage/data/ref_genomes/GRCh38/gatk/gatk_cnv_panel_of_normal_female.hdf5"
   pon_male: "/beegfs-storage/data/ref_genomes/GRCh38/gatk/gatk_cnv_panel_of_normal_male.hdf5" 
+
+manta_config_t:
+  container: "docker://hydragenetics/manta:1.6.0"
+
+manta_config_tn:
+  container: "docker://hydragenetics/manta:1.6.0"
 
 manta_run_workflow_t:
   container: "docker://hydragenetics/manta:1.6.0"
@@ -284,7 +301,6 @@ star_fusion:
   container: "docker://trinityctat/starfusion:1.10.1"
   extra: "--examine_coding_effect"
   genome_path: "/beegfs-storage/data/ref_genomes/GRCh38/star_fusion/GRCh38_gencode_v37_CTAT_lib_Mar012021.plug-n-play/ctat_genome_lib_build_dir"
-
 
 svdb_merge:
   tc_method:
