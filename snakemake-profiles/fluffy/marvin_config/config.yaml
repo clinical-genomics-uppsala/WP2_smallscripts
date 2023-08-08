@@ -1,8 +1,7 @@
 resources: "resources.yaml"
 samples: "samples.tsv"
 units: "units.tsv"
-output: "/home/ninho287/testing/wgs_leukemia_konigskobra/config/output_files.json"
-#output: "/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/config/output_files.json"
+output: "/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/config/output_files.json"
 
 modules:
   alignment: "906d25d0d4791eb5a54cba9954fddf29e27b85dd"
@@ -63,8 +62,7 @@ bcftools_SV:
 
 cnv_html_report:
   show_table: true
-  template_dir: "/home/ninho287/testing/wgs_leukemia_konigskobra/config/cnv_report_template"
-  #template_dir: "/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/config/cnv_report_template"
+  template_dir: "/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/config/cnv_report_template"
   cnv_vcf:
     - annotation: cna_exons
       filter: cnv_hardfilter
@@ -120,9 +118,8 @@ fastqc:
 
 filter_vcf:
   germline: "/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/config/config_germline_filter.yaml"
-  #cnv_hardfilter: "/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/config/config_cnv_hardfilter.yaml"
-  cnv_hardfilter: "/home/ninho287/testing/wgs_leukemia_konigskobra/config/config_cnv_hardfilter.yaml"
-
+  cnv_hardfilter: "/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/config/config_cnv_hardfilter.yaml"
+  
 fusioncatcher:
   container: "docker://hydragenetics/fusioncatcher:1.33"
   genome_path: "/beegfs-storage/data/ref_data/fusioncatcher/human_v102/human_v102"
