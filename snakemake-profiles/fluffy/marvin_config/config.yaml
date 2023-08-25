@@ -194,6 +194,9 @@ multiqc:
         - "qc/picard_collect_wgs_metrics/{sample}_{type}.txt"
         - "qc/samtools_stats/{sample}_{type}.samtools-stats.txt"
         - "qc/multiqc/DNA_number.table.tsv"
+        - "qc/peddy/peddy_sex_check_mqc.tsv"
+        - "qc/peddy/peddy.sex_check.csv"
+        - "qc/peddy/all.ped"
     RNA:
       config: "/beegfs-storage/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/config/multiqc_rna_config.yaml"
       included_unit_types: ["R"]
@@ -224,6 +227,7 @@ pbrun_mutectcaller_tn:
 peddy:
   container: "docker://hydragenetics/peddy:0.4.8"
   extra: "--sites hg38 "
+  config: "/beegfs-storage/projects/wp2/nobackup/CGU_2021_5_GMS_akuta_leukemier_WGS/Bin/wgs_leukemia_konigskobra/config/peddy_mqc.yaml"
 
 picard_collect_alignment_summary_metrics:
   container: "docker://hydragenetics/picard:2.25.0"
