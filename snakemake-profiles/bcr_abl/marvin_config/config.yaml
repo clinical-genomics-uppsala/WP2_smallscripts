@@ -7,10 +7,10 @@ units: "units.tsv"
 default_container: "docker://hydragenetics/common:0.1.8"
 
 reference:
-  genome_dir: "/beegfs-storage/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens_star/" # req by align not used
+  genome_dir: "/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens_star/" # req by align not used
   fasta: "/data/ref_genomes/hg19/genome_fasta/hg19.with.mt.fasta"
   fai: "/data/ref_genomes/hg19/genome_fasta/hg19.with.mt.fasta.fai"
-  design_bed: "/projects/wp2/nobackup/CGU_2022_12_BCR-ABL1/Bin/bcr_abl_pipeline/config/bcr_abl1.bed"
+  design_bed: "/projects/wp2/nobackup/BCR_ABL1/Bin/bcr_abl_pipeline/config/bcr_abl1.bed"
   skip_chrs:
       - "chr1"
       - "chr2"
@@ -55,7 +55,7 @@ convert_pdf:
 dotnet_pisces:
   container: "/projects/wp2/nobackup/Twist_Myeloid/Containers/Pisces-5.2.11.simg"
   bed_files:
-    branford: "/projects/wp2/nobackup/CGU_2022_12_BCR-ABL1/Bin/bcr_abl_pipeline/config/branford_bcr-abl1_positions.bed"
+    branford: "/projects/wp2/nobackup/BCR_ABL1/Bin/bcr_abl_pipeline/config/branford_bcr-abl1_positions.bed"
 
 fastp_pe:
    container: "docker://hydragenetics/fastp:0.20.1"
@@ -66,17 +66,17 @@ fastqc:
 
 fusioncatcher: # not used but req
   container: "docker://hydragenetics/fusioncatcher:1.33"
-  genome_path: "/beegfs-storage/data/ref_data/fusioncatcher/human_v102/human_v102"
+  genome_path: "/data/ref_data/fusioncatcher/human_v102/human_v102"
 
 mosdepth_bed:
   container: "docker://hydragenetics/mosdepth:0.3.2"
-  design_bed: "/projects/wp2/nobackup/CGU_2022_12_BCR-ABL1/Bin/bcr_abl_pipeline/config/branford_SNVs_230118.bed"
+  design_bed: "/projects/wp2/nobackup/BCR_ABL1/Bin/bcr_abl_pipeline/config/branford_SNVs_230118.bed"
 
 multiqc:
   container: "docker://hydragenetics/multiqc:1.11"
   reports:
     RNA:
-      config: "/projects/wp2/nobackup/CGU_2022_12_BCR-ABL1/Bin/bcr_abl_pipeline/config/multiqc_config_rna.yaml"
+      config: "/projects/wp2/nobackup/BCR_ABL1/Bin/bcr_abl_pipeline/config/multiqc_config_rna.yaml"
       included_unit_types: ['R']
       qc_files:
         - "qc/fastqc/{sample}_{type}_{flowcell}_{lane}_{barcode}_{read}_fastqc.zip"
@@ -94,11 +94,11 @@ multiqc:
 # rseqc_bam_stats:
 
 rseqc_gene_body_coverage:
-  bed: "/projects/wp2/nobackup/CGU_2022_12_BCR-ABL1/Bin/bcr_abl_pipeline/config/bcr_abl1_rseqc.bed"
+  bed: "/projects/wp2/nobackup/BCR_ABL1/Bin/bcr_abl_pipeline/config/bcr_abl1_rseqc.bed"
   container: "docker://hydragenetics/rseqc:4.0.0"
 
 rseqc_inner_distance:
-  bed: "/projects/wp2/nobackup/CGU_2022_12_BCR-ABL1/Bin/bcr_abl_pipeline/config/bcr_abl1_rseqc.bed"
+  bed: "/projects/wp2/nobackup/BCR_ABL1/Bin/bcr_abl_pipeline/config/bcr_abl1_rseqc.bed"
   container: "docker://hydragenetics/rseqc:4.0.0"
 
 sample_order_for_multiqc:
@@ -115,7 +115,7 @@ star_fusion:
 
 summary_report:
   container: "/projects/wp2/nobackup/Twist_Myeloid/Containers/python3.9-0.1.0.sif"
-  branford: "/projects/wp2/nobackup/CGU_2022_12_BCR-ABL1/Bin/bcr_abl_pipeline/config/branford_SNVs_230118.bed"
+  branford: "/projects/wp2/nobackup/BCR_ABL1/Bin/bcr_abl_pipeline/config/branford_SNVs_230118.bed"
 
 trimmer_software: "fastp_pe"
 
