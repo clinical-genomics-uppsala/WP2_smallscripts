@@ -1,19 +1,21 @@
 ---
+
 resources: "resources.yaml"
 samples: "samples.tsv"
 units: "units.tsv"
-output: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/niffler_small_cnv/config/output_files.json"
+output: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/niffler_small_cnv/config/output_files.yaml"
 
-default_container: "docker://hydragenetics/common:0.1.9"
+default_container: "docker://hydragenetics/common:0.3.0"
 
 modules:
   alignment: "v0.3.1"
   annotation: "v0.3.0"
-  cnv_sv: "v0.3.1"
+  cnv_sv: "v0.4.1"
   compression: "v1.1.0"
   filtering: "v0.1.0"
   misc: "v0.2.0"
   prealignment: "v1.0.0"
+  reports: "d8b41c8"
   snv_indels: "v0.3.0"
   qc: "v0.3.0"
 
@@ -23,7 +25,7 @@ reference:
   design_bed: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/Bedfiles/Probes_merged_ok_Scilifelab_RUNX1-10kb_v2_1X_TE-91815956_hg38.bed"
   design_bed_gz: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/Bedfiles/Probes_merged_ok_Scilifelab_RUNX1-10kb_v2_1X_TE-91815956_hg38.bed.gz"
   design_intervals: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/Bedfiles/Probes_merged_ok_Scilifelab_RUNX1-10kb_v2_1X_TE-91815956_hg38.intervals"
-  design_intervals_gatk_cnv: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Workarea/CNVkitNormals/230301/references/preprocess_intervals/Probes_merged_ok_Scilifelab_RUNX1-10kb_v2_1X_TE-91815956_hg38.bed.preprocessed.interval_list"
+  design_intervals_gatk_cnv: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Workarea/CNVkitNormals/230810/references/preprocess_intervals/Probes_merged_ok_Scilifelab_RUNX1-10kb_v2_1X_TE-91815956_hg38.bed.preprocessed.interval_list" #"/projects/wp1/nobackup/ngs/utveckling/Twist_DNA_DATA/bed/pool1_pool2_nochr_3c.sort.merged.padded20.cnv400.hg19.210311.met.annotated.bed.preprocessed.interval_list" CollectReadCounts
   skip_chrs:
     - "chr1"
     - "chr2"
@@ -69,19 +71,19 @@ bwa_mem:
   pac: "/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens.fasta.pac"
   sa: "/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens.fasta.sa"
 
+
 cnvkit_batch:
   container: "docker://hydragenetics/cnvkit:0.9.9"
-  normal_reference: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Workarea/CNVkitNormals/230301/references/cnvkit_build_normal_reference/cnvkit.PoN.cnn"
+  normal_reference: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Workarea/CNVkitNormals/230810/references/cnvkit_build_normal_reference/cnvkit.PoN.cnn" #230824_100binsize 230810
   method: "hybrid"
+  extra: " --drop-low-coverage  " #--segment-method hmm-tumor "
 
 cnvkit_call:
   container: "docker://hydragenetics/cnvkit:0.9.9"
 
 cnv_html_report:
-  template: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/niffler_small_cnv/config/cnv_report_template.html"
-  cnv_vcf:
-    - annotation: runx1_exons
-      filter: cnv_hardfilter
+  template_dir: /projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/niffler_small_cnv/config/cnv_report_template
+  show_table: true
 
 cnvkit_scatter:
   container: "docker://hydragenetics/cnvkit:0.9.9"
@@ -90,6 +92,9 @@ cnvkit_scatter:
 crumble:
   container: "docker://hydragenetics/crumble:0.9.0"
   extra: "-O CRAM"
+
+export_results_bedtools_intersect:
+  extra: " -wb "
 
 fastp_pe:
   container: "docker://hydragenetics/fastp:0.20.1"
@@ -107,14 +112,14 @@ gatk_call_copy_ratio_segments:
 
 gatk_collect_allelic_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
-  SNP_interval: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Workarea/CNVkitNormals/230301/references/preprocess_intervals/Probes_merged_ok_Scilifelab_RUNX1-10kb_v2_1X_TE-91815956_hg38.bed.preprocessed.interval_list" #gnomad eller cnvbackbone
+  SNP_interval: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Workarea/CNVkitNormals/230810/references/preprocess_intervals/Probes_merged_ok_Scilifelab_RUNX1-10kb_v2_1X_TE-91815956_hg38.bed.preprocessed.interval_list" #gnomad eller cnvbackbone
 
 gatk_collect_read_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
 
 gatk_denoise_read_counts:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
-  normal_reference: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Workarea/CNVkitNormals/230301/references/create_read_count_panel_of_normals/gatk_cnv_panel_of_normal.hdf5"
+  normal_reference: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Workarea/CNVkitNormals/230810/references/create_read_count_panel_of_normals/gatk_cnv_panel_of_normal.hdf5"
 
 gatk_model_segments:
   container: "docker://hydragenetics/gatk4:4.1.9.0"
@@ -130,14 +135,24 @@ gatk_mutect2_merge_stats:
 
 manta_config_t:
   container: "docker://hydragenetics/manta:1.6.0"
+  extra: "--exome"
 
 manta_run_workflow_t:
   container: "docker://hydragenetics/manta:1.6.0"
 
+merge_cnv_json:
+  annotations:
+    - "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/Bedfiles/RUNX1_NM_001754.5.bed"
+  filtered_cnv_vcfs:
+    - cnv_sv/svdb_query/{sample}_{type}.pathology.svdb_query.annotate_cnv.runx1_exons.filter.cnv_hardfilter.vcf
+  unfiltered_cnv_vcfs:
+    - cnv_sv/svdb_query/{sample}_{type}.pathology.svdb_query.annotate_cnv.runx1_exons.vcf
+  germline_vcf: "snv_indels/bcbio_variation_recall_ensemble/{sample}_{type}.ensembled.vep_annotated.filter.germline.vcf"
+
 mosdepth_bed:
   container: "docker://hydragenetics/mosdepth:0.3.2"
-  extra: ""
-
+  thresholds: "100,200,1000"
+  
 multiqc:
   container: "docker://hydragenetics/multiqc:1.11"
   reports:
@@ -147,7 +162,6 @@ multiqc:
       qc_files:
         - "prealignment/fastp_pe/{sample}_{type}_{flowcell}_{lane}_{barcode}_fastp.json"
         - "qc/fastqc/{sample}_{type}_{flowcell}_{lane}_{barcode}_{read}_fastqc.zip"
-        #- "alignment/picard_mark_duplicates/{sample}_{type}_{chr}.metrics.txt"
         - "qc/picard_collect_hs_metrics/{sample}_{type}.HsMetrics.txt"
         - "qc/picard_collect_duplication_metrics/{sample}_{type}.duplication_metrics.txt"
         - "qc/picard_collect_multiple_metrics/{sample}_{type}.{ext}"
@@ -156,6 +170,7 @@ multiqc:
         - "qc/mosdepth_bed/{sample}_{type}.per-base.bed.gz"
         - "qc/mosdepth_bed/{sample}_{type}.mosdepth.region.dist.txt"
         - "qc/mosdepth_bed/{sample}_{type}.mosdepth.global.dist.txt"
+
 
 picard_mark_duplicates:
   container: "docker://hydragenetics/picard:2.25.4"
@@ -184,6 +199,20 @@ picard_collect_multiple_metrics:
     - "quality_distribution.pdf"
     - "quality_yield_metrics" # quality yield metrics
 
+pindel_call:
+  include_bed: "/projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Bin/Bedfiles/RUNX1_pindel.bed"
+  container: "docker://hydragenetics/pindel:0.2.5b9"
+
+pindel2vcf:
+  container: "docker://hydragenetics/pindel:0.2.5b9"
+  extra: "-is 5 -he 0.01 -e 10 -mc 10 "
+
+pindel_update_vcf_sequence_dictionary:
+  container: "docker://hydragenetics/picard:2.25.0"
+
+sample_order_multiqc:
+  sample_sheet: "SampleSheet.csv"
+
 svdb_merge:
   tc_method:
     - name: pathology
@@ -194,15 +223,15 @@ svdb_merge:
 
 svdb_query:
   container: "docker://hydragenetics/svdb:2.6.0"
-  db_string: "--db /projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Workarea/CNVkitNormals/230301/references/svdb_export/svdb_cnv.vcf --out_frq Normal_AF --out_occ Normal_OCC"
+  db_string: "--db /projects/wp2/nobackup/CGU_2022_18_RUNX1_CNV/Workarea/CNVkitNormals/230810/references/svdb_export/svdb_cnv.vcf --out_frq Normal_AF --out_occ Normal_OCC"
 
 vardict:
   container: "docker://hydragenetics/vardict:1.8.3"
 
 vep:
-  container: "docker://hydragenetics/vep:105"
+  container: "docker://ensemblorg/ensembl-vep:release_110.1" # Ger 110 just nu "docker://hydragenetics/vep:105"
   vep_cache: "/data/ref_genomes/VEP/"
-  extra: "--assembly GRCh38 --check_existing --pick --sift b --polyphen b --ccds --uniprot --hgvs --symbol --numbers --domains --regulatory --canonical --protein --biotype --uniprot --tsl --appris --gene_phenotype --af --af_1kg --af_gnomad --max_af --pubmed --variant_class"
+  extra: "--assembly GRCh38 --everything --check_existing --pick --variant_class"
 
 vt_decompose:
   container: "docker://hydragenetics/vt:2015.11.10"
