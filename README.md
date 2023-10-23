@@ -21,6 +21,7 @@ R script that calculates threshold values for CNVkit in case of impure samples.
 ### Pipeline-starting-scripts
 A folder for bash (or similar) scripts used by Stanley to start clinical pipelines.
 - `start_bcr_abl1.sh`: BCR::ABL1 fusion detection pipline. Stand in sequence folder inside INBOX. Run as `bash start_bcr_abl1.sh <sequenceid>`
+- `Pomfrey_Twist_Myeloid`: folder with files to help create config-files for [Pomfrey](https://github.com/clinical-genomics-uppsala/pomfrey). Is used in start_tm.sh, but can be used stand-alone `python3 set_up_config.yaml -h`.
 
 ### Small scripts
 This directory contains useful small scripts
