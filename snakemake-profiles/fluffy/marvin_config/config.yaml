@@ -55,6 +55,7 @@ arriba_draw_fusion:
 bcftools_SNV:
   all: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/all_snv_38.bed"
   aml: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/aml_snv_38_2022-02-25.bed"
+  tm: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/new_tm_exons.bed"
 
 bcftools_SV:
   all: "/beegfs-storage/data/ref_genomes/GRCh38/gene_lists/all_sv_38.bed"
