@@ -8,19 +8,19 @@ default_resources:
   load: 1
 
 _copy:
-  #  partition: "low_bkup"
+  partition: "low_bkup"
   time: "1:00:00"
 
 arriba:
   mem_mb: 30720
   threads: 5
   time: "72:00:00"
-  #  partition: "low_bkup"
+  partition: "low_bkup"
 
 cnvkit_batch:
-  threads: 2
-  mem_mb: 12288
-  #partition: "low_bkup"
+  threads: 1
+  mem_mb: 6144
+  partition: "low_bkup"
 
 fastp_pe:
   mem_mb: 49152
@@ -28,7 +28,7 @@ fastp_pe:
 
 fastqc:
   load: 25
-  #partition: "low_bkup"
+  partition: "low_bkup"
 
 fusioncatcher:
   mem_mb: 122880 
@@ -38,7 +38,7 @@ fusioncatcher:
 gatk_cnv_collect_allelic_counts:
   mem_mb: 30720 
   threads: 5
-  #partition: "low_bkup"
+  partition: "low_bkup"
 
 gatk_cnv_model_segments:
   mem_mb: 30720
@@ -79,12 +79,12 @@ pbrun_mutectcaller_tn:
 mosdepth:
   mem_mb: 24576
   threads: 4
-  #partition: "low_bkup"
+  partition: "low_bkup"
 
 mosdepth_bed:
   mem_mb: 24576
   threads: 4
-  #partition: "low_bkup"
+  partition: "low_bkup"
 
 rseqc_gene_body_coverage:
   time: "48:00:00"
@@ -93,7 +93,7 @@ spring:
   mem_mb: 49152
   threads: 8
   load: 10
-  #partition: "low_bkup"
+  partition: "low_bkup"
 
 sortmerna:
   mem_mb: 49152
@@ -107,8 +107,9 @@ star_fusion:
   mem_mb: 30720
   threads: 5
   time: "72:00:00"
+  partition: "low_bkup" 
 
 vep:
   mem_mb: 24576
   threads: 4
-  #partition: "low_bkup"
+  partition: "low_bkup"
