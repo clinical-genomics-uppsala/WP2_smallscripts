@@ -9,7 +9,7 @@ git_repo_url="https://github.com/clinical-genomics-uppsala/pickett_bcr_abl_pipel
 inbox_path=""
 analysis_path=""
 pipeline_version=""
-snakemake_profile="/projects/wp2/nobackup/WP2_smallscripts/snakemake-profiles/bcr_abl/"
+snakemake_profile="" #"/projects/wp2/nobackup/WP2_smallscripts/snakemake-profiles/bcr_abl/"
 
 # Process options and arguments
 while [[ $# -gt 0 ]]; do
@@ -22,9 +22,13 @@ while [[ $# -gt 0 ]]; do
             analysis_path="$2"
             shift 2
             ;;
-		--pipeline-version)
+        --pipeline-version)
             pipeline_version="$2"
             shift 2
+            ;;
+	--profile_path)
+            snakemake_profile="$2"
+	    shift 2
             ;;
         *)
             echo "Error: Unknown option or missing argument: $1"
@@ -47,6 +51,11 @@ fi
 if [ -z "$pipeline_version" ]; then
     echo "Error: --pipeline-version is required."
     exit 3
+fi
+
+if [ -z "$profile_path" ]; then
+    echo "Error: --profile-path is required."
+    exit 4
 fi
 
 cd $analysis_path
