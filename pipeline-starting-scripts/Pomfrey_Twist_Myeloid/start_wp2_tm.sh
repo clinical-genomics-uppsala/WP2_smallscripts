@@ -9,7 +9,7 @@ inbox_path=""
 analysis_path=""
 pipeline_version=""
 sequenceid=""
-config="/projects/wp2/nobackup/WP2_smallscripts/pipeline-starting-scripts/Pomfrey_Twist_myeloid/config_defaults_230412.yaml"
+config="" #"/projects/wp2/nobackup/WP2_smallscripts/pipeline-starting-scripts/Pomfrey_Twist_myeloid/config_defaults_230412.yaml"
 samplesheet=""
 
 # Process options and arguments
@@ -32,13 +32,13 @@ while[[ $# -gt 0 ]]; do
         shift 2
         ;;
     --config)
-      config="$2"
-      shift 2
-      ;;
+        config="$2"
+        shift 2
+        ;;
     --samplesheet)
-      samplesheet="$2"
-      shift 2
-      ;;
+        samplesheet="$2"
+        shift 2
+        ;;
     *)
         echo "Error: Unknown option or missing argument: $1"
         exit 1
@@ -67,6 +67,11 @@ if [ -z "$sequenceid" ]; then
   exit 4
 fi
 
+if [ -z "$config" ]; then
+  echo "Error: default --config is required."
+  exit 5
+fi
+
 # If no samplesheet defined, set samplesheet to inbox samplesheet
 if [ -z "$samplesheet" ]; then
   samplesheet=$(echo ${inbox_path}"/SampleSheet.csv")
@@ -76,10 +81,11 @@ fi
 echo "git clone --branch $pipeline_version $git_repo_url_tm"
 git clone --branch $pipeline_version $git_repo_url_tm
 
-python3.9 -m venv venv_tm;
+python3.11 -m venv venv_tm;
 source venv_tm/bin/activate;
-pip install -r pomfrey/requirments.txt;
-module load slurm-drmaa/1.1.3 
+pip install -r pomfrey/requirements.txt;
+module load slurm-drmaa/1.1.3
+
 
 # Merge fastqs samples per lane into same file
 mkdir -p fastqs/
@@ -88,7 +94,7 @@ for i in $(cat ${samplesheet} | grep -i "wp2_tm_" |awk -F "," '{print $1}' ); do
   echo ${sample}
   cat ${inbox_path}/fastq-perLane/${i}_S*R1_001.fastq.gz >fastqs/${sample}_R1_001.fastq.gz && \
   cat ${inbox_path}/fastq-perLane/${i}_S*R2_001.fastq.gz >fastqs/${sample}_R2_001.fastq.gz
-done &&\
+done && \
 
 # Create config-file
 python3.9 /projects/wp2/nobackup/WP2_smallscripts/pipeline-starting-scripts/Pomfrey_Twist_myeloid/set_up_config.py -i ${config} -s ${sequenceid} && \
