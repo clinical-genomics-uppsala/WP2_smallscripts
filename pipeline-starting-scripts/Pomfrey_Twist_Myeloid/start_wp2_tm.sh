@@ -98,10 +98,10 @@ for i in $(cat ${samplesheet} | grep -i "wp2_tm_" |awk -F "," '{print $1}' ); do
 done && \
 
 # Create config-file
+cp ${samplesheet} . && \
 config=WP2_smallscripts/pipeline-starting-scripts/Pomfrey_Twist_Myeloid/config_defaults_latest.yaml && \
 python3.9 WP2_smallscripts/pipeline-starting-scripts/Pomfrey_Twist_myeloid/set_up_config.py -i ${config} -s ${sequenceid} && \
-# Cp samplesheet to scratch
-cp ${samplesheet} . && \
+
 
 # Run pomfrey-snakemake line
 snakemake -p -j 120 --restart-times 1 --drmaa " --nodes=1-1 -A wp2 -p core -t {cluster.time} -n {cluster.n} " \
