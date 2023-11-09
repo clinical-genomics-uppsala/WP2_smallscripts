@@ -78,10 +78,8 @@ if [ -z "$samplesheet" ]; then
   samplesheet=$(echo ${inbox_path}"/SampleSheet.csv")
 fi
 
-cp ${samplesheet} ./
-
 # Clone repos, setup and activate envs
-echo "git clone --branch $pipeline_version $git_repo_url_tm" && \
+echo "git clone --branch $pipeline_version $git_repo_url_tm & git clone --branch $smallscripts_version $git_repo_url_smallscript " && \
 git clone --branch $pipeline_version $git_repo_url_tm && \
 git clone --branch $smallscripts_version $git_repo_url_smallscripts && \
 
@@ -119,5 +117,4 @@ rm slurm-* && \
 rm -r ${inbox_path}/fastq-perLane && \
 # Cp to inbox?
 rsync -ru Results ${inbox_path}/ && \
-rsync -ru variantCalls ${inbox_path}/ && \
-rsync -ru fastqs ${inbox_path}/ 
+rsync -ru variantCalls ${inbox_path}/ 
