@@ -17,7 +17,7 @@ modules:
   misc: "v0.1.0"
   sentieon: "b002d39"
 
-default_container: "docker://hydragenetics/common:0.1.9"
+default_container: "docker://hydragenetics/common:1.8.1"
 
 reference:
   design_bed: "/beegfs-storage/data/ref_genomes/GRCh38/reference_grasnatter/homo_sapiens.wgs.bed"
@@ -223,6 +223,8 @@ multiqc:
         - "prealignment/sortmerna/{sample}_{type}.rrna.log"
         - "qc/multiqc/RNA_number.table.tsv"
         - "qc/picard_collect_alignment_summary_metrics/{sample}_{type}.alignment_summary_metrics.txt"
+        - "fusions/star_fusion/{sample}_{type}/Log.final.out"
+        - "fusions/star_fusion/{sample}_{type}/ReadsPerGene.out.tab"
 
 pbrun_fq2bam:
   container: "docker://nvcr.io/nvidia/clara/clara-parabricks:4.1.1-1"
@@ -287,7 +289,7 @@ rseqc_inner_distance:
 
 sample_order_multiqc:
   sample_sheet: "SampleSheet.csv"
-
+  
 simple_sv_annotation:
   container: "docker://hydragenetics/simple_sv_annotation:2019.02.18"
   panel: "/beegfs-storage/data/ref_genomes/GRCh38/simple_sv_annotation/az-cancer-panel.txt"
