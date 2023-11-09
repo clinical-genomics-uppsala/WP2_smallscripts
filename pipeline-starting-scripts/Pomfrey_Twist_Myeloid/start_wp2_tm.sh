@@ -72,10 +72,12 @@ if [ -z "$config" ]; then
   exit 5
 fi
 
-# If no samplesheet defined, set samplesheet to inbox samplesheet
+# If no samplesheet defined, set samplesheet to inbox samplesheet, and cp to cwd
 if [ -z "$samplesheet" ]; then
   samplesheet=$(echo ${inbox_path}"/SampleSheet.csv")
 fi
+
+cp ${samplesheet} ./
 
 # Clone repos, setup and activate envs
 echo "git clone --branch $pipeline_version $git_repo_url_tm"
