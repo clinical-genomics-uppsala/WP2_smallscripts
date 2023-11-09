@@ -28,7 +28,8 @@ parser.add_argument("-f", "--fastq-folder", help="Folder that contains fastqfile
 
 # parse args
 args = parser.parse_args()
-args.output = args.sequenceid + "_config.yaml"
+if args.output == "SEQUENCEID_config.yaml" :
+    args.output = args.sequenceid + "_config.yaml"
 # print(args)
 
 # Cp default/input config to current dir to add samples to
