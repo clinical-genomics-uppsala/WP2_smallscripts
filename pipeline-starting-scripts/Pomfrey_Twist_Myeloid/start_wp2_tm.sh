@@ -2,7 +2,7 @@
 
 set -e
 # cwd is scratch
-git_repo_url_tm="https://github.com/clinical-genomics-uppsala/pomfrey"
+git_repo_url_tm="https://github.com/clinical-genomics-uppsala/pomfrey.git"
 git_repo_url_smallscripts="https://github.com/clinical-genomics-uppsala/WP2_smallscripts.git"
 
 # Initialize variables
@@ -14,7 +14,7 @@ sequenceid=""
 samplesheet=""
 
 # Process options and arguments
-while[[ $# -gt 0 ]]; do
+while [[ $# -gt 0 ]]; do
   case "$1" in
     --inbox-path)
         inbox_path="$2"
@@ -68,9 +68,9 @@ if [ -z "$smallscripts_version" ]; then
     exit 4
 fi
 
+# If no sequence id is defined, set it to current folder name
 if [ -z "$sequenceid" ]; then
-  echo "Error: --sequenceid is required."
-  exit 5
+    sequenceid=${PWD##*/}
 fi
 
 # If no samplesheet defined, set samplesheet to inbox samplesheet, and cp to cwd
