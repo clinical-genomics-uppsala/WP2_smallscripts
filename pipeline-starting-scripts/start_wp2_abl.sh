@@ -66,7 +66,7 @@ echo "clone repo, build and activate env" && \
 git clone --branch $pipeline_version $git_repo_url && \
 git clone --branch $smallscripts_version $git_repo_url_smallscripts && \
 
-python3 -m venv pickett_venv && \
+python3.9 -m venv pickett_venv && \
 source pickett_venv/bin/activate && \
 pip install -r pickett_bcr_abl_pipeline/requirements.txt && \
 
@@ -78,7 +78,7 @@ sed -i 's/\t000000000-/\t/' units.tsv && \
 cp WP2_smallscripts/snakemake-profiles/pickett_bcr_abl/marvin_config/*.yaml ./ && \
 
 # Cp samplesheet to scratch
-cp ${inbox_path}/SampleSheet.csv . && \
+cp ${inbox_path}/SampleSheet.csv SampleSheet.csv && \
 
 # Run snakemake pipeline
 echo "Load slurm-drmaa and run snakemake pipeline"

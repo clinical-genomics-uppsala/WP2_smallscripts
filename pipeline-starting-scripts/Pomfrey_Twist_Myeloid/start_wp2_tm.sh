@@ -83,24 +83,23 @@ echo "git clone --branch $pipeline_version $git_repo_url_tm & git clone --branch
 git clone --branch $pipeline_version $git_repo_url_tm && \
 git clone --branch $smallscripts_version $git_repo_url_smallscripts && \
 
-python3.11 -m venv venv_tm;  && \
+python3.9 -m venv venv_tm;  && \
 source venv_tm/bin/activate;  && \
 pip install -r pomfrey/requirements.txt;  && \
 module load slurm-drmaa/1.1.3 && \
 
 # Merge fastqs samples per lane into same file
 mkdir -p fastqs/ && \
-for i in $(cat ${samplesheet} | grep -i "wp2_tm_" |awk -F "," '{print $1}' ); do 
-  $(echo $(basename ${inbox_path}/fastq-perLane/${i}_S*L001_R1_001.fastq.gz ) |cut -d '_' -f1-2); # If not L001 anymore, change
+for sample in $(cat ${samplesheet} | grep -i "wp2_tm_" |awk -F "," '{print $1}' ); do 
   echo ${sample}
-  cat ${inbox_path}/fastq-perLane/${i}_S*R1_001.fastq.gz >fastqs/${sample}_R1_001.fastq.gz && \
-  cat ${inbox_path}/fastq-perLane/${i}_S*R2_001.fastq.gz >fastqs/${sample}_R2_001.fastq.gz
+  cat ${inbox_path}/fastq-perLane/${sample}_S*R1_001.fastq.gz >fastqs/${sample}_R1_001.fastq.gz && \
+  cat ${inbox_path}/fastq-perLane/${sample}_S*R2_001.fastq.gz >fastqs/${sample}_R2_001.fastq.gz
 done && \
 
 # Create config-file
-cp ${samplesheet} . && \
+cp ${samplesheet} SampleSheet.csv && \
 config=WP2_smallscripts/pipeline-starting-scripts/Pomfrey_Twist_Myeloid/config_defaults_latest.yaml && \
-python3.9 WP2_smallscripts/pipeline-starting-scripts/Pomfrey_Twist_myeloid/set_up_config.py -i ${config} -s ${sequenceid} && \
+python3.9 WP2_smallscripts/pipeline-starting-scripts/Pomfrey_Twist_Myeloid/set_up_config.py -i ${config} -s ${sequenceid} && \
 
 
 # Run pomfrey-snakemake line
@@ -114,7 +113,7 @@ snakemake -p -j 120 --restart-times 1 --drmaa " --nodes=1-1 -A wp2 -p core -t {c
 && \
 # Remove files?
 rm slurm-* && \
-rm -r ${inbox_path}/fastq-perLane && \
+#rm -r ${inbox_path}/fastq-perLane && \
 # Cp to inbox?
 rsync -ru Results ${inbox_path}/ && \
 rsync -ru variantCalls ${inbox_path}/ 
