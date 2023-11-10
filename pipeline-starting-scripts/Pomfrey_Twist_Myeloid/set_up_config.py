@@ -23,7 +23,7 @@ parser.add_argument(
         WP2_TM_X, otherwise the line will be skipped""",
     default="SampleSheet.csv",
 )
-parser.add_argument("-r1", "--read1-ending", help="Ending of fastq read1 to be used", default="_R1_001.fastq.gz")
+parser.add_argument("-r1", "--read1-ending", help="Ending of fastq read1 to be used", default="R1_001.fastq.gz")
 parser.add_argument("-f", "--fastq-folder", help="Folder that contains fastqfiles", default="fastqs/")
 
 # parse args
