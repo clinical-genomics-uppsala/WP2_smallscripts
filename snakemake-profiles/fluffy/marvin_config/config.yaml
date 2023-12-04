@@ -167,6 +167,7 @@ mosdepth:
   by: "500"
   container: "docker://hydragenetics/mosdepth:0.3.2"
   extra: "--fast-mode --no-per-base"
+  thresholds: "1,5,10,15,20,30,50"
 
 mosdepth_bed:
   container: "docker://hydragenetics/mosdepth:0.3.2"
