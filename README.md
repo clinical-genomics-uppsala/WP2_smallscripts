@@ -30,6 +30,7 @@ This directory contains useful small scripts
     ```
     $> sbatch -A wp2 -p core -n 1 -t 12:00:00 -J somalier WP2_smallscripts/small_scripts/somalier_relate.sh bam_files/ somalier_results
     ```
+- `run_gms_pgx.sh [--step-one | --step-two | --help]`: script to clone and run gms [pgx pipeline](https://github.com/genomic-medicine-sweden/pgx/). Consists of two steps. First step; clone repo and checkout correct version (v0.2.0 as of 240214 since same as gms560). Manually softlink bamfiles and edit samples.tsv and units.tsv files then procceed to step-two. Step-two; creates venv and run snakemake.
 
 
 ### Snakemake-profiles
