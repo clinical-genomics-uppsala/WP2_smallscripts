@@ -3,6 +3,7 @@
 resources: "resources.yaml"
 samples: "samples.tsv"
 units: "units.tsv"
+output: "/projects/wp2/nobackup/BCR_ABL1/Bin/bcr_abl_pipeline/config/output_files.yaml"
 
 default_container: "docker://hydragenetics/common:1.11.1"
 
