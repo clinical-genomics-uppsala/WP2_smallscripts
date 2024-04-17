@@ -64,10 +64,14 @@ with open(args.output + "_config.yaml", "a") as configfile:
             subprocess.run(read2_cmd, stdout=subprocess.PIPE, shell=True, check=True)
 
             sample_order.append(sample_files_r1[0].split("_L00")[0].split("/")[-1])
-            configfile.write('    "' + samplename + '": "' + args.fastq_output + "/" + samplename + args.read1_ending + '"\n')
+            config_sample_string = (
+                '    "' + samplename + '": "' + args.fastq_output + "/" + samplename + args.read1_ending + '"\n'
+            )
+            configfile.write(config_sample_string.replace("//", "/"))
         else:
             read_one = args.fastq_output + "/" + [f for f in file_list if samplename in f and "R1" in f][0]
-            configfile.write('    "' + samplename + '": "' + read_one + '"\n')
+            config_sample_string = '    "' + samplename + '": "' + read_one + '"\n'
+            configfile.write(config_sample_string.replce("//", "/"))
             sample_order.append(read_one.split("_L00")[0].split("/")[-1])
 
 if args.orderfile:
