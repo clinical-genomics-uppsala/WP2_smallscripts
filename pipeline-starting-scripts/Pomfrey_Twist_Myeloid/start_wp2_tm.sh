@@ -14,7 +14,6 @@ analysis_path=$(pwd)
 pomfrey_version=""
 smallscripts_version=""
 sequenceid=""
-samplesheet=""
 
 # Process options and arguments
 while [[ $# -gt 0 ]]; do
