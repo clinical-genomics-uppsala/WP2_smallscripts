@@ -51,7 +51,7 @@ with open(args.output + "_config.yaml", "a") as configfile:
     configfile.write("samples: \n")
     # Create samples list
     file_list = [args.fastq_input + "/" + x for x in os.listdir(args.fastq_input)]
-    samplenames = list(set([file_name.split("_")[0].split("/")[-1] for file_name in file_list]))
+    samplenames = list(set([file_name.split("/")[-1].split("_")[0] for file_name in file_list]))
     sample_order = []
     for samplename in samplenames:
         if args.mergefastq:
