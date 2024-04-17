@@ -1,40 +1,43 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-set -e
+set -euxo pipefail
+
+echo "RUNNING: wp2 abl"
 # cwd is scratch
 
 git_repo_url="https://github.com/clinical-genomics-uppsala/pickett_bcr_abl_pipeline.git"
 git_repo_url_smallscripts="https://github.com/clinical-genomics-uppsala/WP2_smallscripts.git"
 
 # Initialize variables
+bin_path="/projects/bin/wp2_abl/"
 inbox_path=""
-analysis_path=""
-pipeline_version=""
+analysis_path=$(pwd)
+pickett_version=""
 smallscripts_version=""
 
 # Process options and arguments
 while [[ $# -gt 0 ]]; do
     case "$1" in
-        --inbox-path)
-            inbox_path="$2"
-            shift 2
-            ;;
-        --analysis-path)
-            analysis_path="$2"
-            shift 2
-            ;;
-        --pipeline-version)
-            pipeline_version="$2"
-            shift 2
-            ;;
-	    --smallscripts-version)
-            smallscripts_version="$2"
-	        shift 2
-            ;;
-        *)
-            echo "Error: Unknown option or missing argument: $1"
-            exit 1
-            ;;
+    --bin-path)
+        bin_path="$2"
+        shift 2
+        ;;
+    --inbox-path)
+        inbox_path="$2"
+        shift 2
+        ;;
+    --pickett-version)
+        pickett_version="$2"
+        shift 2
+        ;;
+    --smallscripts-version)
+        smallscripts_version="$2"
+        shift 2
+        ;;
+    *)
+        echo "Error: Unknown option or missing argument: $1"
+        exit 1
+        ;;
     esac
 done
 
@@ -44,47 +47,52 @@ if [ -z "$inbox_path" ]; then
     exit 1
 fi
 
-if [ -z "$analysis_path" ]; then
-    echo "Error: --analysis-path is required."
+if [ -z "$pickett_version" ]; then
+    echo "Error: --pickett-version is required."
     exit 2
-fi
-
-if [ -z "$pipeline_version" ]; then
-    echo "Error: --pipeline-version is required."
-    exit 3
 fi
 
 if [ -z "$smallscripts_version" ]; then
     echo "Error: --smallscripts-version is required."
-    exit 4
+    exit 3
 fi
 
-cd $analysis_path # Behovs ej ar cwd?
+pickett_path=${bin_path}/pickett_bcr_abl/${pickett_version}/ &&
+    smallscripts_path=${bin_path}/wp2_smallscripts/${smallscripts_version}/ &&
 
-# Build env and activate it
-echo "clone repo, build and activate env" && \
-git clone --branch $pipeline_version $git_repo_url && \
-git clone --branch $smallscripts_version $git_repo_url_smallscripts && \
+    # If correct pickett version not avail locally download and configure
+    if [ ! -d ${pickett_path} ]; then
+        # Build env and activate it
+        echo "New version on pickett; ${pickett_version}. Clone repo, build and activate env" &&
+            mkdir -p ${pickett_path} &&
+            cd ${pickett_path} &&
+            git clone --branch $pipeline_version $git_repo_url &&
+            echo "Cloning Pickett done, build and activate env" &&
+            python3.9 -m venv venv_pickett &&
+            source venv_pickett/bin/activate &&
+            pip install -r pickett_bcr_abl_pipeline/requirements.txt &&
+            cd ${analysis_path}
+    else
+        source ${pickett_path}/venv_pickett/bin/activate
+    fi
 
-python3.9 -m venv pickett_venv && \
-source pickett_venv/bin/activate && \
-pip install -r pickett_bcr_abl_pipeline/requirements.txt && \
+# If correct version of WP2_smallscripts not avail locally, clone from github
+if [ ! -d ${smallscripts_path} ]; then
+    echo "New version of smallscripts needed; ${smallscripts_version}. Cloning repo" &&
+        mkdir -p ${smallscripts_path} &&
+        cd ${smallscripts_path} &&
+        git clone --branch $smallscripts_version $git_repo_url_smallscripts &&
+        cd ${analysis_path}
+fi
 
 # Prep data
-echo "use hydra to build samples and units"  && \
-hydra-genetics create-input-files -d ${inbox_path}/fastq/ -p MiSeq \
-            -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -t R -s "(R[0-9]{2}-[0-9]{5})" -b NNNNNNNN && \
-sed -i 's/\t000000000-/\t/' units.tsv && \
-cp WP2_smallscripts/snakemake-profiles/pickett_bcr_abl/marvin_config/*.yaml ./ && \
+echo "use hydra to build samples and units" &&
+    hydra-genetics create-input-files -d ${inbox_path}/fastq/ -p MiSeq \
+        -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -t R -s "(R[0-9]{2}-[0-9]{5})" -b NNNNNNNN &&
+    sed -i 's/\t000000000-/\t/' units.tsv &&
+    cp ${smallscripts_path}/WP2_smallscripts/snakemake-profiles/pickett_bcr_abl/marvin_config/*.yaml ./ &&
 
-# Cp samplesheet to scratch
-cp ${inbox_path}/SampleSheet.csv SampleSheet.csv && \
-
-# Run snakemake pipeline
-echo "Load slurm-drmaa and run snakemake pipeline"
-module load slurm-drmaa/1.1.3 && \
-snakemake --profile WP2_smallscripts/snakemake-profiles/pickett_bcr_abl/ --configfile config.yaml && \
-
-# Cp to inbox?
-echo "Cp Results to inbox"
-rsync -ru Results ${inbox_path}/ 
+    # Run snakemake pipeline
+    echo "Load slurm-drmaa and run snakemake pipeline" &&
+    module load slurm-drmaa/1.1.3 &&
+    snakemake --profile ${smallscripts_path}/WP2_smallscripts/snakemake-profiles/pickett_bcr_abl/ --configfile config.yaml
