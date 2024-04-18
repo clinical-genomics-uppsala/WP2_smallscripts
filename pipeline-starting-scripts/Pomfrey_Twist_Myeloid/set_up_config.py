@@ -58,6 +58,8 @@ with open(args.output + "_config.yaml", "a") as configfile:
             # Merge per lane files into one (per direction)
             sample_files_r1 = [f for f in file_list if samplename in f and "R1" in f]
             sample_files_r2 = [f for f in file_list if samplename in f and "R2" in f]
+            sample_files_r1.sort()
+            sample_files_r2.sort()
             read1_cmd = "cat " + " ".join(sample_files_r1) + " > " + args.fastq_output + "/" + samplename + args.read1_ending
             read2_cmd = "cat " + " ".join(sample_files_r2) + " > " + args.fastq_output + "/" + samplename + args.read2_ending
             subprocess.run(read1_cmd, stdout=subprocess.PIPE, shell=True, check=True)
