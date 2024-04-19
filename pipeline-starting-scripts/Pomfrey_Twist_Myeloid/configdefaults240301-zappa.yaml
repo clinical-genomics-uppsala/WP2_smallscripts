@@ -1,3 +1,6 @@
+programdir:
+  dir: "/projects/wp2/nobackup/Twist_Myeloid/Bin/pomfrey/"
+
 reference:
     ref: "/data/ref_genomes/hg19/genome_fasta/hg19.with.mt.fasta"
     bwa: "/data/ref_genomes/hg19/bwa/BWA_0.7.10_refseq/hg19.with.mt.fasta" ##Why two folders should be the same as genome_fasta
