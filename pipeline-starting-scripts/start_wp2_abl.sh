@@ -95,5 +95,5 @@ echo "use hydra to build samples and units" &&
     # Run snakemake pipeline
     echo "Load slurm-drmaa and run snakemake pipeline" &&
     module load slurm-drmaa/1.1.3 &&
-    snakemake --profile ${smallscripts_path}/WP2_smallscripts/snakemake-profiles/pickett_bcr_abl/ --configfile config.yaml
+    snakemake --profile ${smallscripts_path}/WP2_smallscripts/snakemake-profiles/pickett_bcr_abl/ --configfile config.yaml --config PATH_TO_REPO=${pickett_path}
 
