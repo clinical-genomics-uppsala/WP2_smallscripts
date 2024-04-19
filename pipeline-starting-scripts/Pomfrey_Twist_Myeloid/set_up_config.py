@@ -73,7 +73,7 @@ with open(args.output + "_config.yaml", "a") as configfile:
         else:
             read_one = args.fastq_output + "/" + [f for f in file_list if samplename in f and "R1" in f][0]
             config_sample_string = '    "' + samplename + '": "' + read_one + '"\n'
-            configfile.write(config_sample_string.replce("//", "/"))
+            configfile.write(config_sample_string.replace("//", "/"))
             sample_order.append(read_one.split("_L00")[0].split("/")[-1])
 
 if args.orderfile:
