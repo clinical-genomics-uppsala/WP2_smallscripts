@@ -80,7 +80,7 @@ multiqc:
       included_unit_types: ['R']
       qc_files:
         - "qc/fastqc/{sample}_{type}_{flowcell}_{lane}_{barcode}_{read}_fastqc.zip"
-        - "prealignment/fastp_pe/{sample}_{flowcell}_{lane}_{barcode}_{type}_fastp.json"
+        - "prealignment/fastp_pe/{sample}_{type}_{flowcell}_{lane}_{barcode}_fastp.json"
         - "alignment/star/{sample}_{type}.Log.final.out"
         - "qc/mosdepth_bed/{sample}_{type}.mosdepth.global.dist.txt"
         - "qc/mosdepth_bed/{sample}_{type}.mosdepth.region.dist.txt"
