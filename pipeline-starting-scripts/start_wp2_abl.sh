@@ -61,12 +61,12 @@ pickett_path=${bin_path}/pickett_bcr_abl/${pickett_version}/ &&
     smallscripts_path=${bin_path}/wp2_smallscripts/${smallscripts_version}/ &&
 
     # If correct pickett version not avail locally download and configure
-    if [ ! -d ${pickett_path} ]; then
+    if [ ! -d ${pickett_path}/pickett_bcr_abl_pipeline/ ]; then
         # Build env and activate it
         echo "New version on pickett; ${pickett_version}. Clone repo, build and activate env" &&
             mkdir -p ${pickett_path} &&
             cd ${pickett_path} &&
-            git clone --branch $pipeline_version $git_repo_url &&
+            git clone --branch $pickett_version $git_repo_url &&
             echo "Cloning Pickett done, build and activate env" &&
             python3.9 -m venv venv_pickett &&
             source venv_pickett/bin/activate &&
@@ -77,7 +77,7 @@ pickett_path=${bin_path}/pickett_bcr_abl/${pickett_version}/ &&
     fi
 
 # If correct version of WP2_smallscripts not avail locally, clone from github
-if [ ! -d ${smallscripts_path} ]; then
+if [ ! -d ${smallscripts_path}/WP2_smallscripts/ ]; then
     echo "New version of smallscripts needed; ${smallscripts_version}. Cloning repo" &&
         mkdir -p ${smallscripts_path} &&
         cd ${smallscripts_path} &&
@@ -95,5 +95,5 @@ echo "use hydra to build samples and units" &&
     # Run snakemake pipeline
     echo "Load slurm-drmaa and run snakemake pipeline" &&
     module load slurm-drmaa/1.1.3 &&
-    snakemake --profile ${smallscripts_path}/WP2_smallscripts/snakemake-profiles/pickett_bcr_abl/ --configfile config.yaml --config PATH_TO_REPO=${pickett_path}
+    snakemake --profile ${smallscripts_path}/WP2_smallscripts/snakemake-profiles/pickett_bcr_abl/ -s ${pickett_path}/pickett_bcr_abl_pipeline/workflow/Snakefile --configfile config.yaml --config PATH_TO_REPO=${pickett_path}
 
