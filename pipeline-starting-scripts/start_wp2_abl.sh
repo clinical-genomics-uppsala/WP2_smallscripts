@@ -90,6 +90,7 @@ echo "use hydra to build samples and units" &&
     hydra-genetics create-input-files -d ${inbox_path}/fastq/ -p MiSeq \
         -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -t R -s "(R[0-9]{2}-[0-9]{5})" -b NNNNNNNN &&
     sed -i 's/\t000000000-/\t/' units.tsv &&
+    sed -i 's/\/\//\//g' units.tsv &&
     cp ${smallscripts_path}/WP2_smallscripts/snakemake-profiles/pickett_bcr_abl/marvin_config/*.yaml ./ &&
 
     # Run snakemake pipeline
