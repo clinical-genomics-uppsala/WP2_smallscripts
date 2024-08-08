@@ -97,6 +97,8 @@ with open(args.samples, "w+") as outfile:
                 ped_name = samplesheet_dict[line[0]]["trio"]
                 tc = line[1]
                 project = samplesheet_dict[line[0]]["cgu-project"]
+                if samplesheet_dict[line[0]]["sex"].lower() == "f":
+                    samplesheet_dict[line[0]]["sex"] = "k"
                 sex = samplesheet_dict[line[0]]["sex"]
                 if sex.lower() != "m" and sex.lower() != "k" and sex.lower() != "o":
                     sys.exit("Sex is neither M|K|O for sample " + line[0])
