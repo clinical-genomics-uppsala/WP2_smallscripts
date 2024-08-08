@@ -23,9 +23,6 @@ fastp_pe:
   mem_mb: 49152
   threads: 8
 
-fastqc:
-  load: 25
-
 fusioncatcher:
   mem_mb: 122880 
   threads: 20

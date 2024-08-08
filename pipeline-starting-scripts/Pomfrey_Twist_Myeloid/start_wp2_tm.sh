@@ -93,7 +93,7 @@ if [ ! -d ${smallscripts_path} ]; then
         cd ${analysis_path}
 fi
 
-module load slurm-drmaa/1.1.3 &&
+module load slurm-drmaa &&
     echo "Set up config and start pipeline" &&
     # Set up config and merge fastqs samples per lane into same file
     mkdir -p fastq_merged/ &&

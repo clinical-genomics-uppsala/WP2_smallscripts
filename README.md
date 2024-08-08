@@ -25,7 +25,7 @@ A folder for bash (or similar) scripts used by Stanley to start clinical pipelin
 
 ### Small scripts
 This directory contains useful small scripts
-- `wgs_rename_samples.py`: renames samples in `samples.tsv $1` and `units.tsv $2` to pedegree_id from a `"SampleSheet" $3` and does some checks on SampleSheet. Outputs a `samples_ped.tsv` and `units_ped.tsv` file.
+- `wgs_rename_samples.py`: renames samples in `samples.tsv` and `units.tsv` to pedegree_id from a "bioinformatic SampleSheet". Only includes sample from defined workpackages and analysis, also checks for duplicate sex, cgu-project ids and that cell type is known. Usage `python3 wgs_rename_samples.py --help`
 - `get_pathogenic_variants.py`:  file for extracting pathogenic (and likley path osv) and vus variants from a detected variant list (e.g. `/projects/wp2/nobackup/Twist_Myeloid/DetectedVariants/twistVariants-NewDesign2021-10.txt` for TM). `python3 get_pathogenic_variants.py variantlist.txt <basename of output>`
 - `somalier_relate.sh`: script to run `[somalier](https://github.com/brentp/somalier/) relate` from bam on hg19 samples. If needed, [change sites file to hg38](https://github.com/brentp/somalier/releases/tag/v0.2.17). Takes one infolder and the basename for outfiles. Is very quick!
     ```

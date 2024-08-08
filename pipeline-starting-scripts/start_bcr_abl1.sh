@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # borde gora en specifik for abl pipeline!
-source /projects/wp2/nobackup/BCR_ABL1/Bin/venv_bcr_abl/bin/activate
-module load slurm-drmaa/1.1.3
+source /projects/wp2/nobackup/BCR_ABL1/Bin/venv_pickett/bin/activate
+module load slurm-drmaa
 echo "Module loaded"
 seqrun=$1
-snakemake_profile=/projects/wp2/nobackup/WP2_smallscripts/snakemake-profiles/bcr_abl/
+snakemake_profile=/projects/wp2/nobackup/WP2_smallscripts/snakemake-profiles/pickett_bcr_abl/
 
 outbox_dir=/projects/wp2/nobackup/BCR_ABL1/OUTBOX/
 start_dir=$(pwd)
-bin_dir=/projects/wp2/nobackup/BCR_ABL1/Bin/bcr_abl_pipeline
+bin_dir=/projects/wp2/nobackup/BCR_ABL1/Bin/
 
 hydra-genetics create-input-files -d ${start_dir}/fastq/ -p MiSeq --tc 1.0 \
             -a AGATCGGAAGAGCACACGTCTGAACTCCAGTCA,AGATCGGAAGAGCGTCGTGTAGGGAAAGAGTGT -t R -s "(R[0-9]{2}-[0-9]{5})" -b NNNNNNNN && \
@@ -24,7 +24,7 @@ rsync -ruvp *yaml /scratch/wp2/abl/${seqrun}/ && \
 
 cd /scratch/wp2/abl/${seqrun}/ && \
 echo "Cp files to scratch and move to scratch done" && \
-snakemake --profile ${snakemake_profile} --configfile config.yaml && \
+snakemake --profile ${snakemake_profile} --configfile config.yaml --config PATH_TO_REPO=${bin_dir} -s ${bin_dir}/pickett_bcr_abl_pipeline/workflow/Snakefile && \
 
 echo "Snakemake done" && \
 mkdir -p ${outbox_dir}/${seqrun} && \
