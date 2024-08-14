@@ -112,6 +112,7 @@ if "samples_and_settings.json" in args.input:
         with open(args.units + args.output, "r") as units_tsv:
             units_outlines = []
             header_line = units_tsv.readline()
+            units_out.write(header_line)
             for lline in units_tsv:
                 line = lline.strip().split("\t")
                 if line[0] in data["samples"].keys():
