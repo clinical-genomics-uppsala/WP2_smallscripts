@@ -21,3 +21,6 @@ outbase=$(basename $spring_file_full .spring)
 echo "singularity exec --bind ${wd_dir}/ docker://hydragenetics/spring:1.0.1 spring -t 8 -d -g -i ${last_dir}/${spring_file} -o ${last_dir}/${outbase}_R1.fastq.gz ${last_dir}/${outbase}_R2.fastq.gz"
 
 singularity exec --bind ${wd_dir}/ docker://hydragenetics/spring:1.0.1 spring -t 8 -d -g -i ${last_dir}/${spring_file} -o ${last_dir}/${outbase}_R1.fastq.gz ${last_dir}/${outbase}_R2.fastq.gz
+
+# Add sleep so when in loop does not write to same tmp-folder
+sleep 5
