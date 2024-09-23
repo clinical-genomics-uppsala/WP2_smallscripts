@@ -17,10 +17,8 @@ fi
 last_dir=$(echo $wd_dir | rev | cut -f1 -d"/" | rev)
 spring_file=$(basename $spring_file_full)
 outbase=$(basename $spring_file_full .spring)
-
+# Add sleep so when in loop does not write to same tmp-folder
+sleep 5
 echo "singularity exec --bind ${wd_dir}/ docker://hydragenetics/spring:1.0.1 spring -t 8 -d -g -i ${last_dir}/${spring_file} -o ${last_dir}/${outbase}_R1.fastq.gz ${last_dir}/${outbase}_R2.fastq.gz"
 
 singularity exec --bind ${wd_dir}/ docker://hydragenetics/spring:1.0.1 spring -t 8 -d -g -i ${last_dir}/${spring_file} -o ${last_dir}/${outbase}_R1.fastq.gz ${last_dir}/${outbase}_R2.fastq.gz
-
-# Add sleep so when in loop does not write to same tmp-folder
-sleep 5
