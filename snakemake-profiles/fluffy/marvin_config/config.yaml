@@ -5,7 +5,7 @@ output: "{{FLUFFY_HOME}}/config/output_files.yaml"
 
 modules:
   alignment: "906d25d0d4791eb5a54cba9954fddf29e27b85dd"
-  annotation: "3a05574"
+  annotation: "cd97f30"
   cnv_sv: "v0.4.1"
   compression: "v1.1.0"
   filtering: "v0.3.0"
@@ -270,7 +270,7 @@ pindel_update_vcf_sequence_dictionary:
   container: "docker://hydragenetics/picard:2.25.0"
 
 pindel_call:
-  include_bed: "/data/ref_genomes/GRCh38/gene_lists/aml_pindel_38.bed"
+  include_bed: "/data/ref_genomes/GRCh38/gene_lists/aml_pindel_38_240912.bed"
   container: "docker://hydragenetics/pindel:0.2.5b9"
 
 pindel2vcf:
@@ -284,9 +284,6 @@ rseqc_gene_body_coverage:
 rseqc_inner_distance:
   bed: "/data/ref_genomes/GRCh38/rseqc/hg38_GENCODE.v38.bed"
   container: "docker://hydragenetics/rseqc:4.0.0"
-
-sample_order_multiqc:
-  sample_sheet: "SampleSheet.csv"
   
 simple_sv_annotation:
   container: "docker://hydragenetics/simple_sv_annotation:2019.02.18"
