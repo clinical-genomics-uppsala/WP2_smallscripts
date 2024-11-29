@@ -171,7 +171,7 @@ mosdepth_bed:
   design_bed: "/data/ref_genomes/GRCh38/mosdepth/GRCh38_all_exon_sorted.bed"
 
 multiqc:
-  container: "docker://hydragenetics/multiqc:1.21"
+  container: "docker://hydragenetics/multiqc:1.25.1"
   reports:
     DNA:
       config: "{{FLUFFY_HOME}}/config/multiqc_dna_config.yaml"
