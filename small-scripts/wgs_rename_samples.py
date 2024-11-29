@@ -5,6 +5,7 @@ import sys
 import itertools
 import shutil
 import json
+import os
 import logging
 
 logging.basicConfig(
@@ -18,6 +19,15 @@ logging.basicConfig(
 class DefaultList(list):
     def __copy__(self):
         return []
+
+
+def reset_then_exit():
+    logging.debug(f"Resetting samples and units to original, then sys.exit()")
+    shutil.copyfile(args.samples + args.output, args.samples)
+    shutil.copyfile(args.units + args.output, args.units)
+    os.remove(args.samples + args.output)
+    os.remove(args.units + args.output)
+    sys.exit()
 
 
 # Initilize parser
@@ -34,25 +44,9 @@ parser.add_argument(
 parser.add_argument("-o", "--output", help="Output ending to be added to old samples and units files", default="_old")
 parser.add_argument("--samples", help="Input samples.tsv file created with hydra genetics", default="samples.tsv")
 parser.add_argument("--units", help="Input units.tsv file created with hydra genetics", default="units.tsv")
-parser.add_argument(
-    "-w",
-    "--workpackage",
-    action="append",
-    help="Workpackages to include in output, one flag per wp e.g. -w wp2 -w wp3. Not used when samples_and_settings.json used.",
-    default=DefaultList(["wp2"]),
-)
-parser.add_argument(
-    "-a",
-    "--analysis",
-    action="append",
-    help="Analysis to include, one flag per analysis, e.g. -a hg -a tm. Not used when samples_and_settings.json used.",
-    default=DefaultList(["hg"]),
-)
 
 args = parser.parse_args()
 
-args.workpackage = [x.lower() for x in args.workpackage]
-args.analysis = [x.lower() for x in args.analysis]
 
 # Cp original samples.tsv och units.tsv to keep original
 logging.info("Copying samples and units to output-suffix")
@@ -72,37 +66,47 @@ if "samples_and_settings.json" in args.input:
     if len(data) == 0:
         raise Exception("Empty " + args.input + "-file! ")
 
-    logging.info("Checking that each pedegree-id only contains one sex")
+    logging.info("Checking that each pedigree-id/sample_id only contains one sex")
     dup_check_dict = {}
     for sample_id, sample_info in data["samples"].items():
-        if sample_info["settings"]["ped"] not in dup_check_dict:
-            dup_check_dict[sample_info["settings"]["ped"]] = {}
-            dup_check_dict[sample_info["settings"]["ped"]]["sex"] = sample_info["settings"]["sex"].upper()
-        elif dup_check_dict[sample_info["settings"]["ped"]]["sex"] != sample_info["settings"]["sex"].upper():
-            logging.error("Same sample (" + f'{sample_info["settings"]["ped"]}' + ") have two different sexes!")
-            sys.exit()
+        if sample_info["settings"]["ped"].upper() == "NA":
+            sample_name = sample_id
+            logging.warning(f"{sample_id} ped is set to NA, samplename will not be changed!!!")
+        else:
+            sample_name = sample_info["settings"]["ped"]
 
-    logging.info("Create new samples.tsv file based on " + args.samples + args.output + " and samples_and_settings.json.")
+        if sample_name not in dup_check_dict:
+            dup_check_dict[sample_name] = {}
+            dup_check_dict[sample_name]["sex"] = sample_info["settings"]["sex"].upper()
+        elif dup_check_dict[sample_name]["sex"] != sample_info["settings"]["sex"].upper():
+            logging.error(f"Same sample ({sample_name}) have two different sexes!")
+            reset_then_exit()
+
+    logging.info(f"Create new samples.tsv file based on {args.samples}{args.output} and samples_and_settings.json.")
     with open(args.samples + args.output, "r") as samples_tsv:
         samples_outlines = []
         header_line = samples_tsv.readline().strip() + "\tsex\n"
         for lline in samples_tsv:
             line = lline.strip().upper().split("\t")
             if line[0] in data["samples"].keys():
-                ped_name = data["samples"][line[0]]["settings"]["ped"].upper()
+                ped_name = (
+                    line[0]
+                    if data["samples"][line[0]]["settings"]["ped"].upper() == "NA"
+                    else data["samples"][line[0]]["settings"]["ped"].upper()
+                )
                 tc = line[1]
                 if data["samples"][line[0]]["settings"]["sex"].upper() == "F":
                     data["samples"][line[0]]["settings"]["sex"] = "K"
                 sex = data["samples"][line[0]]["settings"]["sex"].upper()
                 if sex != "M" and sex != "K" and sex != "O":
-                    logging.error("Sex is neither M|K|O for sample " + line[0] + f"{ sex=}")
-                    sys.exit()
+                    logging.error(f"Sex is neither M|K|O for sample {line[0]}. {sex=}")
+                    reset_then_exit()
                 samples_outlines.append([ped_name, tc, sex])
             else:
-                logging.error("The D(/R)NA-number " + line[0] + " is not included in " + args.input)
-                sys.exit()
+                logging.error(f"The D(/R)NA-number {line[0]} is not included in {args.input}.")
+                reset_then_exit()
 
-    logging.debug("Removing duplicates lines in samples_outlines")
+    logging.debug("Removing duplicates lines in samples_outlines.")
     with open(args.samples, "w+") as samples_out:
         samples_out.write(header_line)
         # Remove duplicate rows
@@ -111,125 +115,212 @@ if "samples_and_settings.json" in args.input:
             samples_out.write("\t".join(samples_outline) + "\n")
 
     # Read units.tsv_old and create new units.tsv file
-    logging.info("Create new units.tsv based on " + args.units + args.output + " and samples_and_settings.json.")
-    with open(args.units, "w+") as units_out:
-        with open(args.units + args.output, "r") as units_tsv:
-            units_outlines = []
-            header_line = units_tsv.readline()
-            units_out.write(header_line)
-            for lline in units_tsv:
-                line = lline.strip().split("\t")
-                if line[0] in data["samples"].keys():
-                    ped_name = data["samples"][line[0]]["settings"]["ped"].upper()
-                    if (
-                        data["samples"][line[0]]["analysis"].upper() == "IHT"
-                        and data["samples"][line[0]]["settings"]["fragestallning"].upper() != "R"
-                    ):
-                        sample_type = "R"
-                        logging.warning(
-                            "D(/R)NA-number "
-                            + line[0]
-                            + " identified as IHT analysis and fragestallning not R. Sample_type still set to R."
-                        )
-                        logging.debug(f'{data["samples"][line[0]]["settings"]=}')
-                    else:
-                        sample_type = data["samples"][line[0]]["settings"]["fragestallning"].upper()
-
-                    if sample_type != "T" and sample_type != "N" and sample_type != "R":
-                        logging.error(
-                            f"{line[0]}"
-                            + " does not have T|N|R as sample_type. "
-                            + f'{sample_type=}, {data["samples"][line[0]]["settings"]["fragestallning"]=}'
-                        )
-                        sys.exit()
-                    outline = [ped_name, sample_type] + line[2:]
-                    units_out.write("\t".join(outline) + "\n")
-
+    logging.info(f"Create new units.tsv based on {args.units}{args.output} and samples_and_settings.json.")
+    units_outlines = []
+    with open(args.units + args.output, "r") as units_tsv:
+        units_outlines = []
+        header_line = units_tsv.readline()
+        for lline in units_tsv:
+            line = lline.strip().split("\t")
+            if line[0] in data["samples"].keys():
+                ped_name = (
+                    line[0]
+                    if data["samples"][line[0]]["settings"]["ped"].upper() == "NA"
+                    else data["samples"][line[0]]["settings"]["ped"].upper()
+                )
+                if (
+                    data["samples"][line[0]]["analysis"].upper() == "IHT"
+                    and data["samples"][line[0]]["settings"]["fragestallning"].upper() != "R"
+                ):
+                    sample_type = "R"
+                    logging.warning(
+                        f"D(/R)NA-number {line[0]} identified as IHT analysis and fragestallning not R."
+                        + " Sample_type still set to R."
+                    )
+                    logging.debug(f'{data["samples"][line[0]]["settings"]=}')
                 else:
-                    logging.error("The D(/R)NA-number " + line[0] + " is not included in " + args.input)
-                    sys.exit()
+                    sample_type = data["samples"][line[0]]["settings"]["fragestallning"].upper()
+
+                if sample_type != "T" and sample_type != "N" and sample_type != "R":
+                    logging.error(
+                        f"{line[0]} does not have T|N|R as sample_type. "
+                        + f"{sample_type=}, {data['samples'][line[0]]['settings']['fragestallning']=}"
+                    )
+                    reset_then_exit()
+                outline = [ped_name, sample_type] + line[2:]
+                units_outlines.append(outline)
+
+            else:
+                logging.error(f"The D(/R)NA-number {line[0]} is not included in {args.input}.")
+                sys.exit()
+
+    logging.info(f"Check that all barcodes match for each sample-type combo.")
+    barcode_check = {}
+    header_index = header_line.strip().split("\t")
+    for unit_line in units_outlines:
+        sample_type = unit_line[header_index.index("sample")] + "_" + unit_line[header_index.index("type")]
+        if sample_type not in barcode_check.keys():
+            barcode_check[sample_type] = [unit_line[header_index.index("barcode")]]
+        elif unit_line[header_index.index("barcode")] not in barcode_check[sample_type]:
+            logging.debug(
+                f"New barcode for {sample_type}. {unit_line[header_index.index('barcode')]=} {barcode_check[sample_type]=}"
+            )
+            barcode_check[sample_type].append(unit_line[header_index.index("barcode")])
+        else:
+            logging.debug(
+                f"Same barcode already in list. {unit_line[header_index.index('barcode')]=} {barcode_check[sample_type]=}"
+            )
+
+    for key in list(barcode_check.keys()):
+        if len(barcode_check[key]) == 1:
+            del barcode_check[key]
+
+    logging.debug(f"Writing to {args.units}")
+    with open(args.units, "w+") as units_out:
+        units_out.write(header_line)
+        for units_outline in units_outlines:
+            sample_type = units_outline[header_index.index("sample")] + "_" + units_outline[header_index.index("type")]
+            if sample_type in barcode_check:
+                logging.debug(f"Original: {units_outline=}")
+                units_outline[header_index.index("barcode")] = barcode_check[sample_type][0]
+                logging.warning(
+                    f"More than one different barcodes identified for {sample_type}. All values set to {barcode_check[sample_type][0]}!!!"
+                )
+                logging.debug(f"{units_outline=}.{barcode_check[sample_type]=}")
+                logging.debug(f"Updated: {units_outline=}")
+            units_out.write("\t".join(units_outline) + "\n")
 
 else:
-    logging.info("Input (" + args.input + ") not identified as old bioinfo-format")
+    logging.info(f"Input ({args.input}) is identified as old bioinfo-format")
     # old version
     samplesheet_dict = {}
     with open(args.input, "r") as samplesheet:
         header_line = samplesheet.readline().lower().strip().split(",")
         for lline in samplesheet:
-            line = lline.strip().lower().split(",")
-            if (
-                line[header_line.index("workpackage")] in args.workpackage
-                and line[header_line.index("analysis")] in args.analysis
-            ):
-                samplesheet_dict[line[header_line.index("sample_id")]] = {}
-                i = 0
-                for column in header_line:
-                    if column == "description":
-                        i += 1
-                        for description_field in line[header_line.index("description")].split("%"):
-                            samplesheet_dict[line[header_line.index("sample_id")]][description_field.split(":")[0]] = (
-                                description_field.split(":")[1]
-                            )
-                    else:
-                        samplesheet_dict[line[header_line.index("sample_id")]][header_line[i]] = line[i]
-                        i += 1
+            line = lline.strip().upper().split(",")
 
-    if len(samplesheet_dict) == 0:
-        raise Exception(
-            "No samples with workpackage" + ", ".join(args.workpackage) + " and analysis " + ", ".join(args.analysis) + " found."
-        )
+            logging.debug(f"Building the samplesheet dict")
+            samplesheet_dict[line[header_line.index("sample_id")]] = {}
+            i = 0
+            for column in header_line:
+                if column == "description":
+                    i += 1
+                    for description_field in line[header_line.index("description")].split("%"):
+                        samplesheet_dict[line[header_line.index("sample_id")]][description_field.split(":")[0].lower()] = (
+                            description_field.split(":")[1]
+                        )
+                else:
+                    samplesheet_dict[line[header_line.index("sample_id")]][header_line[i]] = line[i]
+                    i += 1
 
-    # Check that pedegree id/trio does not have two or more sex nor project ids
+    # Check that pedigree id/trio does not have two or more sex
+    logging.info(f"Checking that each pedigree-id/sample_id only contains one sex")
     dup_check_dict = {}
     for sample_id, sample_info in samplesheet_dict.items():
-        if sample_info["trio"] not in dup_check_dict:
-            dup_check_dict[sample_info["trio"]] = {}
-            dup_check_dict[sample_info["trio"]]["sex"] = sample_info["sex"]
-            dup_check_dict[sample_info["trio"]]["cgu-project"] = sample_info["cgu-project"]
-        elif dup_check_dict[sample_info["trio"]]["sex"] != sample_info["sex"]:
-            sys.exit("Same sample have two different sex " + sample_info["trio"])
-        elif dup_check_dict[sample_info["trio"]]["cgu-project"] != sample_info["cgu-project"]:
-            sys.exit("Same sample have two different cgu projects " + sample_info["trio"])
+        if sample_info["ped"].upper() == "NA":
+            sample_name = sample_id
+            logging.warning(f"{sample_id} ped is set to NA, samplename will not be changed!!!")
+        else:
+            sample_name = sample_info["ped"]
+
+        if sample_name not in dup_check_dict:
+            dup_check_dict[sample_name] = {}
+            dup_check_dict[sample_name]["sex"] = sample_info["sex"]
+            dup_check_dict[sample_name]["cgu-project"] = sample_info["cgu-project"]
+        elif dup_check_dict[sample_name]["sex"] != sample_info["sex"]:
+            logging.error(f"Sample sample ({sample_name}) have two different sexes.")
+            reset_then_exit()
 
     # samples.tsv file
+    logging.info(f"Creating the new {args.samples}.")
     with open(args.samples, "w+") as outfile:
         with open(args.samples + args.output, "r") as samples_tsv:
             outlines = []
-            header_line = samples_tsv.readline().strip() + "\tproject\tsex\n"
+            header_line = samples_tsv.readline().strip() + "\tsex\n"
             outfile.write(header_line)
             for lline in samples_tsv:
-                line = lline.strip().lower().split("\t")
+                line = lline.strip().upper().split("\t")
                 if line[0] in samplesheet_dict.keys():
-                    ped_name = samplesheet_dict[line[0]]["trio"]
+                    ped_name = (
+                        line[0] if samplesheet_dict[line[0]]["ped"].upper() == "NA" else samplesheet_dict[line[0]]["ped"].upper()
+                    )
                     tc = line[1]
-                    project = samplesheet_dict[line[0]]["cgu-project"]
-                    if samplesheet_dict[line[0]]["sex"].lower() == "f":
-                        samplesheet_dict[line[0]]["sex"] = "k"
+                    if samplesheet_dict[line[0]]["sex"].upper() == "F":
+                        samplesheet_dict[line[0]]["sex"] = "K"
                     sex = samplesheet_dict[line[0]]["sex"]
-                    if sex.lower() != "m" and sex.lower() != "k" and sex.lower() != "o":
-                        sys.exit("Sex is neither M|K|O for sample " + line[0])
+                    if sex.upper() != "M" and sex.upper() != "K" and sex.upper() != "O":
+                        logging.error(f"Sex id neither M|K|O for {line[0]}. {sex=}")
+                        reset_then_exit()
 
-                    outlines.append([ped_name.upper(), tc, project, sex.upper()])
+                    outlines.append([ped_name.upper(), tc, sex.upper()])
+                else:
+                    logging.error(f"The D(/R)NA-number {line[0]} is not included in {args.input}.")
+                    reset_then_exit()
 
-        # Remove duplicate rows
+        logging.debug("Removing duplicates lines in samples_outlines.")
         outlines.sort()
         for outline in [outlines for outlines, _ in itertools.groupby(outlines)]:
             outfile.write("\t".join(outline) + "\n")
 
     # units.tsv file
-    with open(args.units, "w+") as outfile:
-        with open(args.units + args.output, "r") as units_tsv:
-            outlines = []
-            header_line = units_tsv.readline()
-            outfile.write(header_line)
-            for lline in units_tsv:
-                line = lline.strip().split("\t")
-                if line[0].lower() in samplesheet_dict.keys():  # tar bort prov icke matchande workpackage analysis
-                    ped_name = samplesheet_dict[line[0].lower()]["trio"]
-                    sample_type = samplesheet_dict[line[0].lower()]["fragestallning"]
-                    if sample_type == "heltranskriptom":
-                        sample_type = "r"
-                    if sample_type != "t" and sample_type != "n" and sample_type != "r":
-                        sys.exit("Sample type/fragestallning is neither t|n|r|heltranskriptom " + sample_type)
-                    outline = [ped_name.upper(), sample_type.upper()] + line[2:]
-                    outfile.write("\t".join(outline) + "\n")
+    logging.info(f"Creating new {args.units}")
+    units_outlines = []
+    with open(args.units + args.output, "r") as units_tsv:
+        header_line = units_tsv.readline()
+
+        for lline in units_tsv:
+            line = lline.strip().split("\t")
+            if line[0] in samplesheet_dict.keys():
+                ped_name = (
+                    line[0] if samplesheet_dict[line[0]]["ped"].upper() == "NA" else samplesheet_dict[line[0]]["ped"].upper()
+                )
+                sample_type = samplesheet_dict[line[0]]["fragestallning"]
+                if sample_type.lower() == "heltranskriptom":
+                    logging.warning(f"Fragestallning set to heltranskriptom for {ped_name}, sample_type set still set to R.")
+                    sample_type = "R"
+                if sample_type != "T" and sample_type != "N" and sample_type != "R":
+                    logging.error(
+                        f"Sample type/fragestallning set to neither T|N|R|heltranskriptom for {ped_name}. {sample_type=}"
+                    )
+                    reset_then_exit()
+                outline = [ped_name.upper(), sample_type] + line[2:]
+                units_outlines.append(outline)
+            else:
+                logging.error(f"The D(/R)NA-number {line[0]} is not included in {args.input}.")
+                reset_then_exit()
+
+    logging.info(f"Check that all barcodes match for each sample-type combo.")
+    barcode_check = {}
+    header_index = header_line.strip().split("\t")
+    for unit_line in units_outlines:
+        sample_type = unit_line[header_index.index("sample")] + "_" + unit_line[header_index.index("type")]
+        if sample_type not in barcode_check.keys():
+            barcode_check[sample_type] = [unit_line[header_index.index("barcode")]]
+        elif unit_line[header_index.index("barcode")] not in barcode_check[sample_type]:
+            logging.debug(
+                f"New barcode for {sample_type}. {unit_line[header_index.index('barcode')]=} {barcode_check[sample_type]=}"
+            )
+            barcode_check[sample_type].append(unit_line[header_index.index("barcode")])
+        else:
+            logging.debug(
+                f"Same barcode already in list. {unit_line[header_index.index('barcode')]=} {barcode_check[sample_type]=}"
+            )
+
+    for key in list(barcode_check.keys()):
+        if len(barcode_check[key]) == 1:
+            del barcode_check[key]
+
+    logging.debug(f"Writing to {args.units}")
+    with open(args.units, "w+") as units_out:
+        units_out.write(header_line)
+        for units_outline in units_outlines:
+            sample_type = units_outline[header_index.index("sample")] + "_" + units_outline[header_index.index("type")]
+            if sample_type in barcode_check:
+                logging.debug(f"Original: {units_outline=}")
+                units_outline[header_index.index("barcode")] = barcode_check[sample_type][0]
+                logging.warning(
+                    f"More than one different barcodes identified for {sample_type}. All values set to {barcode_check[sample_type][0]}!!!"
+                )
+                logging.debug(f"{units_outline=}.{barcode_check[sample_type]=}")
+                logging.debug(f"Updated: {units_outline=}")
+            units_out.write("\t".join(units_outline) + "\n")
