@@ -184,7 +184,8 @@ if "samples_and_settings.json" in args.input:
                 logging.debug(f"Original: {units_outline=}")
                 units_outline[header_index.index("barcode")] = barcode_check[sample_type][0]
                 logging.warning(
-                    f"More than one different barcodes identified for {sample_type}. All values set to {barcode_check[sample_type][0]}!!!"
+                    f"More than one different barcodes identified for {sample_type}. "
+                    + f"All values set to {barcode_check[sample_type][0]}!!!"
                 )
                 logging.debug(f"{units_outline=}.{barcode_check[sample_type]=}")
                 logging.debug(f"Updated: {units_outline=}")
@@ -319,7 +320,8 @@ else:
                 logging.debug(f"Original: {units_outline=}")
                 units_outline[header_index.index("barcode")] = barcode_check[sample_type][0]
                 logging.warning(
-                    f"More than one different barcodes identified for {sample_type}. All values set to {barcode_check[sample_type][0]}!!!"
+                    f"More than one different barcodes identified for {sample_type}."
+                    + f" All values set to {barcode_check[sample_type][0]}!!!"
                 )
                 logging.debug(f"{units_outline=}.{barcode_check[sample_type]=}")
                 logging.debug(f"Updated: {units_outline=}")
