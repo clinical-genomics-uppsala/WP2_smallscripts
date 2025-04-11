@@ -294,6 +294,15 @@ snpeff:
   container: "docker://hydragenetics/snpeff:5.0"
   db: "/data/ref_genomes/GRCh38/snpeff/data/GRCh38.99"
 
+somalier_extract:
+  container: "docker://brentp/somalier:v0.2.18"
+  sites: "/data/ref_data/somalier/v0.2.18/sites.hg38.vcf.gz"
+  extra: ""
+
+somalier_relate: 
+  container: "docker://brentp/somalier:v0.2.18"
+  extra: "--infer"
+  
 sortmerna:
   container: "docker://hydragenetics/sortmerna:4.3.4"
   fasta:
