@@ -300,6 +300,9 @@ somalier_extract:
   sites: "/data/ref_data/somalier/v0.2.18/sites.hg38.vcf.gz"
   extra: ""
 
+somalier_mqc:
+  config: "{{FLUFFY_HOME}}/config/somalier_mqc.yaml"
+
 somalier_relate: 
   container: "docker://brentp/somalier:v0.2.18"
   extra: "--infer"
