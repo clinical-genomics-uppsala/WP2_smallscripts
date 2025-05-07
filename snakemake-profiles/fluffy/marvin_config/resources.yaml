@@ -27,6 +27,7 @@ fusioncatcher:
   mem_mb: 122880 
   threads: 20
   time: "160:00:00"
+  partition: "core"
 
 gatk_cnv_collect_allelic_counts:
   mem_mb: 30720 
