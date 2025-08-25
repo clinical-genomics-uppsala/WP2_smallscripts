@@ -56,7 +56,7 @@ arriba_draw_fusion:
 bcftools_SNV:
   all: "/data/ref_genomes/GRCh38/gene_lists/all_snv_38.bed"
   aml: "/data/ref_genomes/GRCh38/gene_lists/aml_snv_38_2022-02-25.bed"
-  tm: "/data/ref_genomes/GRCh38/gene_lists/new_tm_exons.bed"
+  tm: "/data/ref_genomes/GRCh38/gene_lists/Twist_myeloid_coding_exons_added_regions.240220.bed"
 
 bcftools_SV:
   all: "/data/ref_genomes/GRCh38/gene_lists/all_sv_38.bed"
