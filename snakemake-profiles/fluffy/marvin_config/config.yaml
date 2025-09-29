@@ -236,7 +236,7 @@ bcftools_SV:
 cnvkit_batch:
   container: "docker://hydragenetics/cnvkit:0.9.9"
   method: "wgs"
-  normal_reference: "/home/ninho287/testing/CNVKit/CNVkitPOOL/CNVkitPool/Reference_Normal_pool.WGS.250822.bin1000.cnn"
+  normal_reference: "/data/ref_genomes/GRCh38/reference_grasnatter/cnvkit_wgs_pon/Reference_Normal_pool.WGS.250822.bin1000.cnn"
   extra: "--drop-low-coverage "
 
 cnvkit_call:
