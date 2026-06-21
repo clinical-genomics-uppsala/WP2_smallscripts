@@ -45,27 +45,27 @@ manta_run_workflow_tn:
   mem_mb: 245760
   threads: 40
 
-pbrun_fq2bam:
+pbrun_fq2bam_recal:
   gres: "--gres=gres:gpu:4"
-  mem_mb: 770000
-  mem_per_cpu: 4096
-  partition: "GPU_low"
+  mem_mb: 655360
+  mem_per_cpu: 16384
+  partition: "GPU_hi"
   threads: 40
   time: "12:00:00"
 
 pbrun_mutectcaller_t:
   gres: "--gres=gres:gpu:4"
-  mem_mb: 770000 
-  mem_per_cpu: 4096
-  partition: "GPU_low"
+  mem_mb: 655360 
+  mem_per_cpu: 16384
+  partition: "GPU_hi"
   threads: 40
   time: "20:00:00"
 
 pbrun_mutectcaller_tn:
   gres: "--gres=gres:gpu:4"
-  mem_mb: 770000
-  mem_per_cpu: 4096
-  partition: "GPU_low"
+  mem_mb: 655360
+  mem_per_cpu: 16384
+  partition: "GPU_hi"
   threads: 40
   time: "20:00:00"
 
